@@ -10,57 +10,51 @@ import Foundation
 
 extension String {
     var expandingTildeInPath: String {
-        get {
-            return NSString(string: self).expandingTildeInPath
-        }
+        return NSString(string: self).expandingTildeInPath
     }
 
     var deletingLastPathComponent: String {
-        get {
-            return NSString(string: self).deletingLastPathComponent
-        }
+        return NSString(string: self).deletingLastPathComponent
     }
 
     var lastPathComponent: String {
-        get {
-            return NSString(string: self).lastPathComponent
-        }
+        return NSString(string: self).lastPathComponent
     }
 
     var standardizingPath: String {
-        get {
-            return NSString(string: self).standardizingPath
-        }
+        return NSString(string: self).standardizingPath
     }
 
     var isAbsolutePath: Bool {
-        get {
-            return NSString(string: self).isAbsolutePath
-        }
+        return NSString(string: self).isAbsolutePath
+    }
+
+    func trimmed() -> String {
+        return self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     func appendingPathComponent(_ str: String) -> String {
         return NSString(string: self).appendingPathComponent(str)
     }
 
-    subscript (i: Int) -> Character {
-        return self[index(startIndex, offsetBy: i)]
+    subscript (idx: Int) -> Character {
+        return self[index(startIndex, offsetBy: idx)]
     }
 
-    subscript (i: Int) -> String {
-        return String(self[i] as Character)
+    subscript (idx: Int) -> String {
+        return String(self[idx] as Character)
     }
 
-    subscript(r: Range<Int>) -> String {
-        let lower = self.index(self.startIndex, offsetBy: r.lowerBound)
-        let upper = self.index(self.startIndex, offsetBy: r.upperBound)
+    subscript(range: Range<Int>) -> String {
+        let lower = self.index(self.startIndex, offsetBy: range.lowerBound)
+        let upper = self.index(self.startIndex, offsetBy: range.upperBound)
         let substr = self[lower..<upper]
         return String(substr)
     }
 
-    subscript(r: ClosedRange<Int>) -> String {
-        let lower = self.index(self.startIndex, offsetBy: r.lowerBound)
-        let upper = self.index(self.startIndex, offsetBy: r.upperBound)
+    subscript(range: ClosedRange<Int>) -> String {
+        let lower = self.index(self.startIndex, offsetBy: range.lowerBound)
+        let upper = self.index(self.startIndex, offsetBy: range.upperBound)
         let substr = self[lower...upper]
         return String(substr)
     }

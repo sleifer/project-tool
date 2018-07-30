@@ -19,7 +19,7 @@ extension Collection where Element == String {
         }
         return maxCount
     }
-    
+
     func splittingShortArgs() -> [String] {
         return self.map { (item) -> [String] in
             var items: [String] = []

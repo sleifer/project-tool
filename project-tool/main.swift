@@ -19,7 +19,7 @@ func main() {
 
         do {
             #if DEBUG
-            let args = ["pt", "report"]
+            let args = ["pt", "build", "-RD"]
             commandName = args[0]
             let parsed = try parser.parse(args)
             #else
@@ -29,45 +29,13 @@ func main() {
 
             #if DEBUG
             // for testing in Xcode
-            let path = "~/Documents/Code/homoidentus".expandingTildeInPath
+            let path = "~/Documents/Code/project-tool".expandingTildeInPath
             FileManager.default.changeCurrentDirectoryPath(path)
             #endif
 
             baseDirectory = FileManager.default.currentDirectoryPath
 
-            var skipSubcommand = false
-            var cmd: Command?
-
-            if parsed.option("--version") != nil {
-                print("Version \(toolVersion)")
-                skipSubcommand = true
-            }
-            if parsed.option("--help") != nil {
-                parser.printHelp()
-                skipSubcommand = true
-            }
-
-            if skipSubcommand == false {
-                switch parsed.subcommand ?? "root" {
-                case "bashcomp":
-                    cmd = BashcompCommand(parser: parser)
-                case "bashcompfile":
-                    cmd = BashcompfileCommand()
-                case "project":
-                    cmd = ProjectCommand()
-                case "build":
-                    cmd = BuildCommand()
-                case "root":
-                    if parsed.parameters.count > 0 {
-                        print("Unknown command: \(parsed.parameters[0])")
-                    }
-                    break
-                default:
-                    print("Unknown command.")
-                }
-            }
-
-            if let cmd = cmd {
+            if let cmd = commandFrom(parser: parser) {
                 cmd.run(cmd: parsed)
             }
         } catch {
@@ -75,10 +43,46 @@ func main() {
             parser.printHelp()
         }
 
-        while (backgroundCount > 0 && (spinRunLoop())) {
+        while (backgroundCount > 0 && spinRunLoop() == true) {
             // do nothing
         }
     }
+}
+
+func commandFrom(parser: ArgParser) -> Command? {
+    var skipSubcommand = false
+    var cmd: Command?
+    let parsed = parser.parsed
+
+    if parsed.option("--version") != nil {
+        print("Version \(toolVersion)")
+        skipSubcommand = true
+    }
+    if parsed.option("--help") != nil {
+        parser.printHelp()
+        skipSubcommand = true
+    }
+
+    if skipSubcommand == false {
+        switch parsed.subcommand ?? "root" {
+        case "bashcomp":
+            cmd = BashcompCommand(parser: parser)
+        case "bashcompfile":
+            cmd = BashcompfileCommand()
+        case "project":
+            cmd = ProjectCommand()
+        case "build":
+            cmd = BuildCommand()
+        case "root":
+            if parsed.parameters.count > 0 {
+                print("Unknown command: \(parsed.parameters[0])")
+            }
+        default:
+            print("Unknown command.")
+        }
+    }
+
+    return cmd
 }
 
 func baseSubPath(_ subpath: String) -> String {
@@ -103,12 +107,11 @@ func spinRunLoop() -> Bool {
 }
 
 func startBackgroundTask() {
-    backgroundCount = backgroundCount + 1
+    backgroundCount += 1
 }
 
 func endBackgroundTask() {
-    backgroundCount = backgroundCount - 1
+    backgroundCount -= 1
 }
 
 main()
-

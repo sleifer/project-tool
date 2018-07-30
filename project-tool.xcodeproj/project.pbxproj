@@ -51,6 +51,7 @@
 		DB9B0221210E2ED600471D34 /* CommandDefinition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandDefinition.swift; sourceTree = "<group>"; };
 		DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCommand.swift; sourceTree = "<group>"; };
 		DB9B022F210E4D4400471D34 /* BuildCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildCommand.swift; sourceTree = "<group>"; };
+		DB9B0233210EB36600471D34 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .swiftlint.yml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +68,7 @@
 		DB9B0202210E2E1600471D34 = {
 			isa = PBXGroup;
 			children = (
+				DB9B0233210EB36600471D34 /* .swiftlint.yml */,
 				DB9B020D210E2E1600471D34 /* project-tool */,
 				DB9B020C210E2E1600471D34 /* Products */,
 			);
@@ -127,6 +129,7 @@
 				DB9B0207210E2E1600471D34 /* Sources */,
 				DB9B0208210E2E1600471D34 /* Frameworks */,
 				DB9B0209210E2E1600471D34 /* CopyFiles */,
+				DB9B0231210EB27300471D34 /* swiftlint */,
 			);
 			buildRules = (
 			);
@@ -168,6 +171,24 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		DB9B0231210EB27300471D34 /* swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = swiftlint;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		DB9B0207210E2E1600471D34 /* Sources */ = {

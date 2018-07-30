@@ -35,11 +35,11 @@ func makeCommandDefinition() -> CommandDefinition {
     definition.subcommands.append(bashcompfileCommand())
 
     definition.defaultSubcommand = "project"
-    
+
     return definition
 }
 
-fileprivate func projectCommand() -> SubcommandDefinition {
+private func projectCommand() -> SubcommandDefinition {
     var command = SubcommandDefinition()
     command.name = "project"
     command.synopsis = "Act on project (directory) in various ways."
@@ -77,7 +77,7 @@ fileprivate func projectCommand() -> SubcommandDefinition {
     return command
 }
 
-fileprivate func buildCommand() -> SubcommandDefinition {
+private func buildCommand() -> SubcommandDefinition {
     var command = SubcommandDefinition()
     command.name = "build"
     command.synopsis = "Build project in various ways."
@@ -117,7 +117,7 @@ fileprivate func buildCommand() -> SubcommandDefinition {
     return command
 }
 
-fileprivate func bashcompCommand() -> SubcommandDefinition {
+private func bashcompCommand() -> SubcommandDefinition {
     var command = SubcommandDefinition()
     command.name = "bashcomp"
     command.hidden = true
@@ -127,7 +127,7 @@ fileprivate func bashcompCommand() -> SubcommandDefinition {
     return command
 }
 
-fileprivate func bashcompfileCommand() -> SubcommandDefinition {
+private func bashcompfileCommand() -> SubcommandDefinition {
     var command = SubcommandDefinition()
     command.name = "bashcompfile"
     command.hidden = true
@@ -135,4 +135,3 @@ fileprivate func bashcompfileCommand() -> SubcommandDefinition {
 
     return command
 }
-
