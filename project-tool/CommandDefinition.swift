@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CommandLineCore
 
 func makeCommandDefinition() -> CommandDefinition {
     var definition = CommandDefinition()

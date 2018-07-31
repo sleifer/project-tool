@@ -7,15 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB23F6FD211099660048E1E9 /* libCommandLineCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DB23F6FC211099660048E1E9 /* libCommandLineCore.a */; };
 		DB9B020F210E2E1600471D34 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B020E210E2E1600471D34 /* main.swift */; };
-		DB9B0222210E2ED600471D34 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B0215210E2ED600471D34 /* Command.swift */; };
-		DB9B0223210E2ED600471D34 /* StringWriting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B0217210E2ED600471D34 /* StringWriting.swift */; };
-		DB9B0224210E2ED600471D34 /* String-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B0218210E2ED600471D34 /* String-Extension.swift */; };
-		DB9B0227210E2ED600471D34 /* ArgParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B021B210E2ED600471D34 /* ArgParser.swift */; };
-		DB9B0228210E2ED600471D34 /* DebugLogFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B021C210E2ED600471D34 /* DebugLogFile.swift */; };
-		DB9B0229210E2ED600471D34 /* ProcessRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B021D210E2ED600471D34 /* ProcessRunner.swift */; };
-		DB9B022A210E2ED600471D34 /* BashcompfileCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B021F210E2ED600471D34 /* BashcompfileCommand.swift */; };
-		DB9B022B210E2ED600471D34 /* BashcompCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B0220210E2ED600471D34 /* BashcompCommand.swift */; };
 		DB9B022C210E2ED600471D34 /* CommandDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B0221210E2ED600471D34 /* CommandDefinition.swift */; };
 		DB9B022E210E4D2B00471D34 /* ProjectCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */; };
 		DB9B0230210E4D4400471D34 /* BuildCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B022F210E4D4400471D34 /* BuildCommand.swift */; };
@@ -34,16 +27,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DB23F6FC211099660048E1E9 /* libCommandLineCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libCommandLineCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB9B020B210E2E1600471D34 /* pt */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pt; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB9B020E210E2E1600471D34 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		DB9B0215210E2ED600471D34 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
-		DB9B0217210E2ED600471D34 /* StringWriting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringWriting.swift; sourceTree = "<group>"; };
-		DB9B0218210E2ED600471D34 /* String-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String-Extension.swift"; sourceTree = "<group>"; };
-		DB9B021B210E2ED600471D34 /* ArgParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArgParser.swift; sourceTree = "<group>"; };
-		DB9B021C210E2ED600471D34 /* DebugLogFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugLogFile.swift; sourceTree = "<group>"; };
-		DB9B021D210E2ED600471D34 /* ProcessRunner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessRunner.swift; sourceTree = "<group>"; };
-		DB9B021F210E2ED600471D34 /* BashcompfileCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BashcompfileCommand.swift; sourceTree = "<group>"; };
-		DB9B0220210E2ED600471D34 /* BashcompCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BashcompCommand.swift; sourceTree = "<group>"; };
 		DB9B0221210E2ED600471D34 /* CommandDefinition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandDefinition.swift; sourceTree = "<group>"; };
 		DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCommand.swift; sourceTree = "<group>"; };
 		DB9B022F210E4D4400471D34 /* BuildCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildCommand.swift; sourceTree = "<group>"; };
@@ -55,18 +41,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB23F6FD211099660048E1E9 /* libCommandLineCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DB23F6FB211099660048E1E9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DB23F6FC211099660048E1E9 /* libCommandLineCore.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		DB9B0202210E2E1600471D34 = {
 			isa = PBXGroup;
 			children = (
 				DB9B0233210EB36600471D34 /* .swiftlint.yml */,
 				DB9B020D210E2E1600471D34 /* project-tool */,
 				DB9B020C210E2E1600471D34 /* Products */,
+				DB23F6FB211099660048E1E9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -81,32 +77,16 @@
 		DB9B020D210E2E1600471D34 /* project-tool */ = {
 			isa = PBXGroup;
 			children = (
-				DB9B021B210E2ED600471D34 /* ArgParser.swift */,
-				DB9B0215210E2ED600471D34 /* Command.swift */,
 				DB9B0221210E2ED600471D34 /* CommandDefinition.swift */,
 				DB9B021E210E2ED600471D34 /* CommandHandlers */,
-				DB9B021C210E2ED600471D34 /* DebugLogFile.swift */,
-				DB9B0216210E2ED600471D34 /* Extensions */,
 				DB9B020E210E2E1600471D34 /* main.swift */,
-				DB9B021D210E2ED600471D34 /* ProcessRunner.swift */,
-				DB9B0217210E2ED600471D34 /* StringWriting.swift */,
 			);
 			path = "project-tool";
-			sourceTree = "<group>";
-		};
-		DB9B0216210E2ED600471D34 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				DB9B0218210E2ED600471D34 /* String-Extension.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 		DB9B021E210E2ED600471D34 /* CommandHandlers */ = {
 			isa = PBXGroup;
 			children = (
-				DB9B0220210E2ED600471D34 /* BashcompCommand.swift */,
-				DB9B021F210E2ED600471D34 /* BashcompfileCommand.swift */,
 				DB9B022F210E4D4400471D34 /* BuildCommand.swift */,
 				DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */,
 			);
@@ -189,18 +169,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB9B022B210E2ED600471D34 /* BashcompCommand.swift in Sources */,
-				DB9B0223210E2ED600471D34 /* StringWriting.swift in Sources */,
-				DB9B0227210E2ED600471D34 /* ArgParser.swift in Sources */,
 				DB9B020F210E2E1600471D34 /* main.swift in Sources */,
 				DB9B0230210E4D4400471D34 /* BuildCommand.swift in Sources */,
 				DB9B022C210E2ED600471D34 /* CommandDefinition.swift in Sources */,
-				DB9B0224210E2ED600471D34 /* String-Extension.swift in Sources */,
 				DB9B022E210E4D2B00471D34 /* ProjectCommand.swift in Sources */,
-				DB9B0229210E2ED600471D34 /* ProcessRunner.swift in Sources */,
-				DB9B0228210E2ED600471D34 /* DebugLogFile.swift in Sources */,
-				DB9B022A210E2ED600471D34 /* BashcompfileCommand.swift in Sources */,
-				DB9B0222210E2ED600471D34 /* Command.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

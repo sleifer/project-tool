@@ -7,9 +7,9 @@
 //
 
 import Foundation
+import CommandLineCore
 
-let toolVersion = "0.1.1"
-var backgroundCount: Int = 0
+let toolVersion = "0.1.2"
 var baseDirectory: String = ""
 var commandName: String = ""
 
@@ -43,9 +43,7 @@ func main() {
             parser.printHelp()
         }
 
-        while (backgroundCount > 0 && spinRunLoop() == true) {
-            // do nothing
-        }
+        CommandLineRunLoop.shared.waitForBackgroundTasks()
     }
 }
 
@@ -99,19 +97,6 @@ func setCurrentDir(_ subpath: String) {
 
 func resetCurrentDir() {
     setCurrentDir(baseDirectory)
-}
-
-@discardableResult
-func spinRunLoop() -> Bool {
-    return RunLoop.current.run(mode: .defaultRunLoopMode, before: Date(timeIntervalSinceNow: 2))
-}
-
-func startBackgroundTask() {
-    backgroundCount += 1
-}
-
-func endBackgroundTask() {
-    backgroundCount -= 1
 }
 
 main()

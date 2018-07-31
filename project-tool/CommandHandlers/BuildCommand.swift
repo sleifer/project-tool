@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CommandLineCore
 
 class BuildCommand: Command {
     var dir = FileManager.default.currentDirectoryPath
@@ -15,7 +16,7 @@ class BuildCommand: Command {
 
     var destinationFlags: [String] = []
 
-    override func run(cmd: ParsedCommand) {
+    override open func run(cmd: ParsedCommand) {
         if cmd.option("--root") != nil {
             if let path = findGitRoot() {
                 dir = path
