@@ -32,8 +32,6 @@ func makeCommandDefinition() -> CommandDefinition {
 
     definition.subcommands.append(projectCommand())
     definition.subcommands.append(buildCommand())
-    definition.subcommands.append(bashcompCommand())
-    definition.subcommands.append(bashcompfileCommand())
 
     definition.defaultSubcommand = "project"
 
@@ -114,25 +112,6 @@ private func buildCommand() -> SubcommandDefinition {
     inPassed.hasFileArguments = true
     inPassed.help = "Build into <param>."
     command.options.append(inPassed)
-
-    return command
-}
-
-private func bashcompCommand() -> SubcommandDefinition {
-    var command = SubcommandDefinition()
-    command.name = "bashcomp"
-    command.hidden = true
-    command.suppressesOptions = true
-    command.warnOnMissingSpec = false
-
-    return command
-}
-
-private func bashcompfileCommand() -> SubcommandDefinition {
-    var command = SubcommandDefinition()
-    command.name = "bashcompfile"
-    command.hidden = true
-    command.warnOnMissingSpec = false
 
     return command
 }
