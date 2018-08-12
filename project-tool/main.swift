@@ -9,7 +9,7 @@
 import Foundation
 import CommandLineCore
 
-let toolVersion = "0.1.3"
+let toolVersion = "0.1.4"
 var baseDirectory: String = ""
 var commandName: String = ""
 
