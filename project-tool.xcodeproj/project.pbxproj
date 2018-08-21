@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB0B882F212B93B0005506C9 /* CleanupCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0B882E212B93B0005506C9 /* CleanupCommand.swift */; };
 		DB23F6FD211099660048E1E9 /* libCommandLineCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DB23F6FC211099660048E1E9 /* libCommandLineCore.a */; };
 		DB9B020F210E2E1600471D34 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B020E210E2E1600471D34 /* main.swift */; };
 		DB9B022C210E2ED600471D34 /* CommandDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B0221210E2ED600471D34 /* CommandDefinition.swift */; };
@@ -27,6 +28,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DB0B882E212B93B0005506C9 /* CleanupCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupCommand.swift; sourceTree = "<group>"; };
 		DB23F6FC211099660048E1E9 /* libCommandLineCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libCommandLineCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB23F7002110A3A40048E1E9 /* .module-versions */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".module-versions"; sourceTree = "<group>"; };
 		DB9B020B210E2E1600471D34 /* pt */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pt; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,6 +93,7 @@
 			children = (
 				DB9B022F210E4D4400471D34 /* BuildCommand.swift */,
 				DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */,
+				DB0B882E212B93B0005506C9 /* CleanupCommand.swift */,
 			);
 			path = CommandHandlers;
 			sourceTree = "<group>";
@@ -174,6 +177,7 @@
 				DB9B020F210E2E1600471D34 /* main.swift in Sources */,
 				DB9B0230210E4D4400471D34 /* BuildCommand.swift in Sources */,
 				DB9B022C210E2ED600471D34 /* CommandDefinition.swift in Sources */,
+				DB0B882F212B93B0005506C9 /* CleanupCommand.swift in Sources */,
 				DB9B022E210E4D2B00471D34 /* ProjectCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

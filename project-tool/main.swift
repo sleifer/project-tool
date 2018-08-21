@@ -9,7 +9,7 @@
 import Foundation
 import CommandLineCore
 
-let toolVersion = "0.1.4"
+let toolVersion = "0.1.5"
 var baseDirectory: String = ""
 var commandName: String = ""
 
@@ -19,7 +19,7 @@ func main() {
 
         do {
             #if DEBUG
-            let args = ["pt", "build", "-RD"]
+            let args = ["pt", "cleanup"]
             commandName = args[0]
             let parsed = try parser.parse(args)
             #else
@@ -47,6 +47,8 @@ func main() {
     }
 }
 
+// swiftlint:disable cyclomatic_complexity
+
 func commandFrom(parser: ArgParser) -> Command? {
     var skipSubcommand = false
     var cmd: Command?
@@ -71,6 +73,8 @@ func commandFrom(parser: ArgParser) -> Command? {
             cmd = ProjectCommand()
         case "build":
             cmd = BuildCommand()
+        case "cleanup":
+            cmd = CleanupCommand()
         case "root":
             if parsed.parameters.count > 0 {
                 print("Unknown command: \(parsed.parameters[0])")
@@ -82,6 +86,8 @@ func commandFrom(parser: ArgParser) -> Command? {
 
     return cmd
 }
+
+// swiftlint:enable cyclomatic_complexity
 
 func baseSubPath(_ subpath: String) -> String {
     var path = subpath.standardizingPath

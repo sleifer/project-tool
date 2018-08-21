@@ -25,13 +25,14 @@ func makeCommandDefinition() -> CommandDefinition {
     definition.options.append(help)
 
     var root = CommandOption()
-    root.shortOption = "-r"
+    root.shortOption = "-R"
     root.longOption = "--root"
     root.help = "Use git repository root directory, not current."
     definition.options.append(root)
 
     definition.subcommands.append(projectCommand())
     definition.subcommands.append(buildCommand())
+    definition.subcommands.append(cleanupCommand())
 
     definition.defaultSubcommand = "project"
 
@@ -82,36 +83,56 @@ private func buildCommand() -> SubcommandDefinition {
     command.synopsis = "Build project in various ways."
 
     var release = CommandOption()
-    release.shortOption = "-R"
+    release.shortOption = "-r"
     release.longOption = "--release"
     release.help = "Build Release instead of Debug."
     command.options.append(release)
 
     var inApp = CommandOption()
-    inApp.shortOption = "-A"
+    inApp.shortOption = "-a"
     inApp.longOption = "--applications"
     inApp.help = "Build into /Applications."
     command.options.append(inApp)
 
     var inBin = CommandOption()
-    inBin.shortOption = "-B"
+    inBin.shortOption = "-b"
     inBin.longOption = "--bin"
     inBin.help = "Build into ~/bin."
     command.options.append(inBin)
 
     var inDesk = CommandOption()
-    inDesk.shortOption = "-D"
+    inDesk.shortOption = "-d"
     inDesk.longOption = "--desktop"
     inDesk.help = "Build into ~/Desktop."
     command.options.append(inDesk)
 
     var inPassed = CommandOption()
-    inPassed.shortOption = "-O"
+    inPassed.shortOption = "-o"
     inPassed.longOption = "--out"
     inPassed.argumentCount = 1
     inPassed.hasFileArguments = true
     inPassed.help = "Build into <param>."
     command.options.append(inPassed)
+
+    return command
+}
+
+private func cleanupCommand() -> SubcommandDefinition {
+    var command = SubcommandDefinition()
+    command.name = "cleanup"
+    command.synopsis = "Delete build products."
+
+    var derived = CommandOption()
+    derived.shortOption = "-d"
+    derived.longOption = "--derived"
+    derived.help = "Delete derived data."
+    command.options.append(derived)
+
+    var realm = CommandOption()
+    realm.shortOption = "-r"
+    realm.longOption = "--realm"
+    realm.help = "Delete Realm sync_bin."
+    command.options.append(realm)
 
     return command
 }
