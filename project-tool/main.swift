@@ -14,7 +14,7 @@ let toolVersion = "0.1.7"
 func main() {
     #if DEBUG
     // for testing in Xcode
-    let path = "~/Documents/Code/project-tool".expandingTildeInPath
+    let path = "~/Documents/Code/LogbookVis".expandingTildeInPath
     FileManager.default.changeCurrentDirectoryPath(path)
     #endif
 
@@ -35,7 +35,7 @@ func main() {
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "cleanup"]
+    let args = ["pt", "cleanup", "-i"]
     #else
     let args = CommandLine.arguments
     #endif
