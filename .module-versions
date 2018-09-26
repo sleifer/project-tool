@@ -1,4 +1,4 @@
-CommandLineCore, ~> 1.1
+CommandLineCore, ~> 1.2
 
 // Submodule name (comma) <test> (space) version
 // Tests: == >= ~>

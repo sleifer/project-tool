@@ -9,100 +9,38 @@
 import Foundation
 import CommandLineCore
 
-let toolVersion = "0.1.6"
-var baseDirectory: String = ""
-var commandName: String = ""
+let toolVersion = "0.1.7"
 
 func main() {
-    autoreleasepool {
-        let parser = ArgParser(definition: makeCommandDefinition())
+    #if DEBUG
+    // for testing in Xcode
+    let path = "~/Documents/Code/project-tool".expandingTildeInPath
+    FileManager.default.changeCurrentDirectoryPath(path)
+    #endif
 
-        do {
-            #if DEBUG
-            let args = ["pt", "cleanup"]
-            commandName = args[0]
-            let parsed = try parser.parse(args)
-            #else
-            let parsed = try parser.parse(CommandLine.arguments)
-            commandName = CommandLine.arguments[0].lastPathComponent
-            #endif
+    let core = CommandCore()
+    core.set(version: toolVersion)
+    core.set(help: "A command-line project tool coordinator.")
+    core.set(defaultCommand: "project")
 
-            #if DEBUG
-            // for testing in Xcode
-            let path = "~/Documents/Code/project-tool".expandingTildeInPath
-            FileManager.default.changeCurrentDirectoryPath(path)
-            #endif
+    var root = CommandOption()
+    root.shortOption = "-R"
+    root.longOption = "--root"
+    root.help = "Use git repository root directory, not current."
+    core.addGlobal(option: root)
 
-            baseDirectory = FileManager.default.currentDirectoryPath
+    core.add(command: ProjectCommand.self)
+    core.add(command: BuildCommand.self)
+    core.add(command: CleanupCommand.self)
 
-            if let cmd = commandFrom(parser: parser) {
-                cmd.run(cmd: parsed)
-            }
-        } catch {
-            print("Invalid arguments.")
-            parser.printHelp()
-        }
+    #if DEBUG
+    // for testing in Xcode
+    let args = ["pt", "cleanup"]
+    #else
+    let args = CommandLine.arguments
+    #endif
 
-        CommandLineRunLoop.shared.waitForBackgroundTasks()
-    }
-}
-
-// swiftlint:disable cyclomatic_complexity
-
-func commandFrom(parser: ArgParser) -> Command? {
-    var skipSubcommand = false
-    var cmd: Command?
-    let parsed = parser.parsed
-
-    if parsed.option("--version") != nil {
-        print("Version \(toolVersion)")
-        skipSubcommand = true
-    }
-    if parsed.option("--help") != nil {
-        parser.printHelp()
-        skipSubcommand = true
-    }
-
-    if skipSubcommand == false {
-        switch parsed.subcommand ?? "root" {
-        case "bashcomp":
-            cmd = BashcompCommand(parser: parser)
-        case "bashcompfile":
-            cmd = BashcompfileCommand()
-        case "project":
-            cmd = ProjectCommand()
-        case "build":
-            cmd = BuildCommand()
-        case "cleanup":
-            cmd = CleanupCommand()
-        case "root":
-            if parsed.parameters.count > 0 {
-                print("Unknown command: \(parsed.parameters[0])")
-            }
-        default:
-            print("Unknown command.")
-        }
-    }
-
-    return cmd
-}
-
-// swiftlint:enable cyclomatic_complexity
-
-func baseSubPath(_ subpath: String) -> String {
-    var path = subpath.standardizingPath
-    if path.isAbsolutePath == false {
-        path = baseDirectory.appendingPathComponent(path)
-    }
-    return path
-}
-
-func setCurrentDir(_ subpath: String) {
-    FileManager.default.changeCurrentDirectoryPath(baseSubPath(subpath))
-}
-
-func resetCurrentDir() {
-    setCurrentDir(baseDirectory)
+    core.process(args: args)
 }
 
 main()

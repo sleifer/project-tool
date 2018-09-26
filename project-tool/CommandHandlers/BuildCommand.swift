@@ -11,12 +11,13 @@ import CommandLineCore
 
 class BuildCommand: Command {
     var dir = FileManager.default.currentDirectoryPath
-
     var configurationFlags: [String] = ["-configuration", "Debug"]
-
     var destinationFlags: [String] = []
 
-    override open func run(cmd: ParsedCommand) {
+    required init() {
+    }
+
+    func run(cmd: ParsedCommand, core: CommandCore) {
         if cmd.option("--root") != nil {
             if let path = findGitRoot() {
                 dir = path
@@ -59,6 +60,46 @@ class BuildCommand: Command {
         }
 
         buildWithXcode()
+    }
+
+    static func commandDefinition() -> SubcommandDefinition {
+        var command = SubcommandDefinition()
+        command.name = "build"
+        command.synopsis = "Build project in various ways."
+
+        var release = CommandOption()
+        release.shortOption = "-r"
+        release.longOption = "--release"
+        release.help = "Build Release instead of Debug."
+        command.options.append(release)
+
+        var inApp = CommandOption()
+        inApp.shortOption = "-a"
+        inApp.longOption = "--applications"
+        inApp.help = "Build into /Applications."
+        command.options.append(inApp)
+
+        var inBin = CommandOption()
+        inBin.shortOption = "-b"
+        inBin.longOption = "--bin"
+        inBin.help = "Build into ~/bin."
+        command.options.append(inBin)
+
+        var inDesk = CommandOption()
+        inDesk.shortOption = "-d"
+        inDesk.longOption = "--desktop"
+        inDesk.help = "Build into ~/Desktop."
+        command.options.append(inDesk)
+
+        var inPassed = CommandOption()
+        inPassed.shortOption = "-o"
+        inPassed.longOption = "--out"
+        inPassed.argumentCount = 1
+        inPassed.hasFileArguments = true
+        inPassed.help = "Build into <param>."
+        command.options.append(inPassed)
+
+        return command
     }
 
     func findGitRoot() -> String? {

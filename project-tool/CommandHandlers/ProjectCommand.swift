@@ -10,7 +10,10 @@ import Foundation
 import CommandLineCore
 
 class ProjectCommand: Command {
-    override func run(cmd: ParsedCommand) {
+    required init() {
+    }
+
+    func run(cmd: ParsedCommand, core: CommandCore) {
         var dir = FileManager.default.currentDirectoryPath
 
         if cmd.option("--root") != nil {
@@ -40,6 +43,44 @@ class ProjectCommand: Command {
         if cmd.option("--xcode") != nil {
             openXcode(dir)
         }
+    }
+
+    static func commandDefinition() -> SubcommandDefinition {
+        var command = SubcommandDefinition()
+        command.name = "project"
+        command.synopsis = "Act on project (directory) in various ways."
+
+        var finder = CommandOption()
+        finder.shortOption = "-f"
+        finder.longOption = "--finder"
+        finder.help = "Open current dir in Finder."
+        command.options.append(finder)
+
+        var launchbar = CommandOption()
+        launchbar.shortOption = "-l"
+        launchbar.longOption = "--launchbar"
+        launchbar.help = "Open current dir in LaunchBar."
+        command.options.append(launchbar)
+
+        var sublime = CommandOption()
+        sublime.shortOption = "-s"
+        sublime.longOption = "--sublime"
+        sublime.help = "Open current dir in Sublime Text."
+        command.options.append(sublime)
+
+        var tower = CommandOption()
+        tower.shortOption = "-t"
+        tower.longOption = "--tower"
+        tower.help = "Open current dir in Tower."
+        command.options.append(tower)
+
+        var xcode = CommandOption()
+        xcode.shortOption = "-x"
+        xcode.longOption = "--xcode"
+        xcode.help = "Open Xcode project from current dir in Xcode."
+        command.options.append(xcode)
+
+        return command
     }
 
     func findGitRoot() -> String? {

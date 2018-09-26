@@ -10,7 +10,10 @@ import Foundation
 import CommandLineCore
 
 class CleanupCommand: Command {
-    override func run(cmd: ParsedCommand) {
+    required init() {
+    }
+
+    func run(cmd: ParsedCommand, core: CommandCore) {
         var derived: Bool = false
         var realm: Bool = false
 
@@ -40,5 +43,25 @@ class CleanupCommand: Command {
         }
 
         print("Done.")
+    }
+
+    static func commandDefinition() -> SubcommandDefinition {
+        var command = SubcommandDefinition()
+        command.name = "cleanup"
+        command.synopsis = "Delete build products."
+
+        var derived = CommandOption()
+        derived.shortOption = "-d"
+        derived.longOption = "--derived"
+        derived.help = "Delete derived data."
+        command.options.append(derived)
+
+        var realm = CommandOption()
+        realm.shortOption = "-r"
+        realm.longOption = "--realm"
+        realm.help = "Delete Realm sync_bin."
+        command.options.append(realm)
+
+        return command
     }
 }
