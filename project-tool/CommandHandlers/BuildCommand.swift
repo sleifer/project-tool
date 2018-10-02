@@ -13,6 +13,7 @@ class BuildCommand: Command {
     var dir = FileManager.default.currentDirectoryPath
     var configurationFlags: [String] = ["-configuration", "Debug"]
     var destinationFlags: [String] = []
+    var dryrun: Bool = false
 
     required init() {
     }
@@ -24,6 +25,11 @@ class BuildCommand: Command {
             } else {
                 return
             }
+        }
+
+        if cmd.option("--dryrun") != nil {
+            dryrun = true
+            print("Dry Run...")
         }
 
         if cmd.option("--release") != nil {
@@ -66,6 +72,12 @@ class BuildCommand: Command {
         var command = SubcommandDefinition()
         command.name = "build"
         command.synopsis = "Build project in various ways."
+
+        var dryrun = CommandOption()
+        dryrun.shortOption = "-n"
+        dryrun.longOption = "--dryrun"
+        dryrun.help = "Output build command but do not build anything."
+        command.options.append(dryrun)
 
         var release = CommandOption()
         release.shortOption = "-r"
@@ -162,26 +174,36 @@ class BuildCommand: Command {
     }
 
     func buildWithXcode() {
+        var args: [String] = []
+        var valid: Bool = false
         let projectPath = findXcodeProject(dir)
         if projectPath.count == 0 {
             print("No Xcode project in current directory.")
         } else {
             if projectPath.hasSuffix(".xcodeproj") {
-                var args: [String] = []
-                args.append(contentsOf: configurationFlags)
-                args.append(contentsOf: destinationFlags)
-                ProcessRunner.runCommand("xcodebuild", args: args, echo: true)
+                valid = true
             } else {
                 if let scheme = findWorkspaceScheme(projectPath) {
-                    var args: [String] = ["-workspace", projectPath, "-scheme", scheme]
-                    args.append(contentsOf: configurationFlags)
-                    args.append(contentsOf: destinationFlags)
-                    print("+++")
-                    print("xcodebuild \(args.joined(separator: " "))")
-                    print("---")
-                    ProcessRunner.runCommand("xcodebuild", args: args, echo: true)
+                    valid = true
+                    args.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
                 }
             }
+
+            // run
+            args.append(contentsOf: configurationFlags)
+            args.append(contentsOf: destinationFlags)
+            if valid == true {
+                print("+++")
+                print("xcodebuild \(args.joined(separator: " "))")
+                print("---")
+                if dryrun == false {
+                    ProcessRunner.runCommand("xcodebuild", args: args, echo: true)
+                }
+            } else {
+                print("Couldn't generate a valid xcodebuild command.")
+            }
+
+            // clean up build directory
             let buildDir = projectPath.deletingLastPathComponent.appendingPathComponent("build")
             let dfm = FileManager.default
             if dfm.fileExists(atPath: buildDir) == true {
