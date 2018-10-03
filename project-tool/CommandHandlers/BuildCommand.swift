@@ -94,13 +94,15 @@ class BuildCommand: Command {
 
         let dstBinaryPath = findDstBinaryPath(args)
         if cmd.option("--clear") != nil {
-            if let path = dstBinaryPath, FileManager.default.fileExists(atPath: path) == true {
+            if let path = dstBinaryPath {
                 if dryrun == false {
-                    let url = URL(fileURLWithPath: path)
-                    do {
-                        try FileManager.default.trashItem(at: url, resultingItemURL: nil)
-                    } catch {
-                        print("Failed to move (\(url.path)) to the trash.")
+                    if FileManager.default.fileExists(atPath: path) == true {
+                        let url = URL(fileURLWithPath: path)
+                        do {
+                            try FileManager.default.trashItem(at: url, resultingItemURL: nil)
+                        } catch {
+                            print("Failed to move (\(url.path)) to the trash.")
+                        }
                     }
                 } else {
                     print("Would delete: \(path)")
@@ -257,7 +259,7 @@ class BuildCommand: Command {
                     if parts.count == 2 {
                         targetBuildDir = parts[1].trimmed()
                     }
-                } else if trimLine.hasPrefix("EXECUTABLE_NAME") {
+                } else if trimLine.hasPrefix("FULL_PRODUCT_NAME") {
                     let parts = trimLine.components(separatedBy: " = ")
                     if parts.count == 2 {
                         executableName = parts[1].trimmed()
