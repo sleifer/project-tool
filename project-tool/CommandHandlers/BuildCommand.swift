@@ -18,6 +18,8 @@ class BuildCommand: Command {
     required init() {
     }
 
+    // swiftlint:disable cyclomatic_complexity
+
     func run(cmd: ParsedCommand, core: CommandCore) {
         if cmd.option("--root") != nil {
             if let path = findGitRoot() {
@@ -65,13 +67,80 @@ class BuildCommand: Command {
             destinationFlags = ["DEPLOYMENT_LOCATION=YES", "DSTROOT=/", "INSTALL_PATH=\(destinationPath)"]
         }
 
-        buildWithXcode()
+        // build up command args
+        var args: [String] = ["xcodebuild"]
+        var valid: Bool = false
+        let projectPath = findXcodeProject(dir)
+        if projectPath.count == 0 {
+            print("No Xcode project in current directory.")
+        } else {
+            if projectPath.hasSuffix(".xcodeproj") {
+                valid = true
+            } else {
+                if let scheme = findWorkspaceScheme(projectPath) {
+                    valid = true
+                    args.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
+                }
+            }
+
+            args.append(contentsOf: configurationFlags)
+            args.append(contentsOf: destinationFlags)
+        }
+
+        if valid == false {
+            print("Couldn't generate a valid xcodebuild command.")
+            return
+        }
+
+        let dstBinaryPath = findDstBinaryPath(args)
+        if cmd.option("--clear") != nil {
+            if let path = dstBinaryPath, FileManager.default.fileExists(atPath: path) == true {
+                if dryrun == false {
+                    let url = URL(fileURLWithPath: path)
+                    do {
+                        try FileManager.default.trashItem(at: url, resultingItemURL: nil)
+                    } catch {
+                        print("Failed to move (\(url.path)) to the trash.")
+                    }
+                } else {
+                    print("Would delete: \(path)")
+                }
+            } else {
+                print("Couldn't determine target binary path to delete.")
+                return
+            }
+        }
+
+        // run
+        print("\(args.joined(separator: " "))")
+        print("--- ---")
+        if dryrun == false {
+            ProcessRunner.runCommand(args, echo: true)
+
+            // clean up build directory
+            let buildDir = projectPath.deletingLastPathComponent.appendingPathComponent("build")
+            let dfm = FileManager.default
+            if dfm.fileExists(atPath: buildDir) == true {
+                do {
+                    try dfm.removeItem(atPath: buildDir)
+                } catch {
+                }
+            }
+        }
     }
+
+    // swiftlint:enable cyclomatic_complexity
 
     static func commandDefinition() -> SubcommandDefinition {
         var command = SubcommandDefinition()
         command.name = "build"
         command.synopsis = "Build project in various ways."
+
+        var clear = CommandOption()
+        clear.shortOption = "-c"
+        clear.longOption = "--clear"
+        clear.help = "Delete any existing target binary before building."
+        command.options.append(clear)
 
         var dryrun = CommandOption()
         dryrun.shortOption = "-n"
@@ -173,45 +242,33 @@ class BuildCommand: Command {
         return nil
     }
 
-    func buildWithXcode() {
-        var args: [String] = []
-        var valid: Bool = false
-        let projectPath = findXcodeProject(dir)
-        if projectPath.count == 0 {
-            print("No Xcode project in current directory.")
-        } else {
-            if projectPath.hasSuffix(".xcodeproj") {
-                valid = true
-            } else {
-                if let scheme = findWorkspaceScheme(projectPath) {
-                    valid = true
-                    args.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
-                }
-            }
-
-            // run
-            args.append(contentsOf: configurationFlags)
-            args.append(contentsOf: destinationFlags)
-            if valid == true {
-                print("+++")
-                print("xcodebuild \(args.joined(separator: " "))")
-                print("---")
-                if dryrun == false {
-                    ProcessRunner.runCommand("xcodebuild", args: args, echo: true)
-                }
-            } else {
-                print("Couldn't generate a valid xcodebuild command.")
-            }
-
-            // clean up build directory
-            let buildDir = projectPath.deletingLastPathComponent.appendingPathComponent("build")
-            let dfm = FileManager.default
-            if dfm.fileExists(atPath: buildDir) == true {
-                do {
-                    try dfm.removeItem(atPath: buildDir)
-                } catch {
+    fileprivate func findDstBinaryPath(_ args: [String]) -> String? {
+        var targetBuildDir: String?
+        var executableName: String?
+        var envargs = args
+        envargs.append("-showBuildSettings")
+        let runner = ProcessRunner.runCommand(envargs)
+        if runner.status == 0 {
+            let lines = runner.stdOut.trimmed().lines()
+            for line in lines {
+                let trimLine = line.trimmed()
+                if trimLine.hasPrefix("TARGET_BUILD_DIR") {
+                    let parts = trimLine.components(separatedBy: " = ")
+                    if parts.count == 2 {
+                        targetBuildDir = parts[1].trimmed()
+                    }
+                } else if trimLine.hasPrefix("EXECUTABLE_NAME") {
+                    let parts = trimLine.components(separatedBy: " = ")
+                    if parts.count == 2 {
+                        executableName = parts[1].trimmed()
+                    }
                 }
             }
         }
+        if let theTargetBuildDir = targetBuildDir, let theExecutableName = executableName {
+            return theTargetBuildDir.appendingPathComponent(theExecutableName)
+        }
+
+        return nil
     }
 }
