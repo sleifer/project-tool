@@ -13,7 +13,9 @@ class BuildCommand: Command {
     var dir = FileManager.default.currentDirectoryPath
     var configurationFlags: [String] = ["-configuration", "Debug"]
     var destinationFlags: [String] = []
+    var cleanDestinationFlags: [String] = []
     var dryrun: Bool = false
+    var preClean: Bool = false
 
     required init() {
     }
@@ -27,6 +29,10 @@ class BuildCommand: Command {
             } else {
                 return
             }
+        }
+
+        if cmd.option("--clean") != nil {
+            preClean = true
         }
 
         if cmd.option("--dryrun") != nil {
@@ -65,10 +71,12 @@ class BuildCommand: Command {
 
         if destinationPath.count != 0 {
             destinationFlags = ["DEPLOYMENT_LOCATION=YES", "DSTROOT=/", "INSTALL_PATH=\(destinationPath)"]
+            cleanDestinationFlags = ["DEPLOYMENT_LOCATION=YES", "INSTALL_PATH=\(destinationPath)", "clean"]
         }
 
         // build up command args
         var args: [String] = ["xcodebuild"]
+        var cleanArgs: [String] = ["xcodebuild"]
         var valid: Bool = false
         let projectPath = findXcodeProject(dir)
         if projectPath.count == 0 {
@@ -80,11 +88,14 @@ class BuildCommand: Command {
                 if let scheme = findWorkspaceScheme(projectPath) {
                     valid = true
                     args.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
+                    cleanArgs.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
                 }
             }
 
             args.append(contentsOf: configurationFlags)
+            cleanArgs.append(contentsOf: configurationFlags)
             args.append(contentsOf: destinationFlags)
+            cleanArgs.append(contentsOf: cleanDestinationFlags)
         }
 
         if valid == false {
@@ -113,7 +124,17 @@ class BuildCommand: Command {
             }
         }
 
-        // run
+        // clean
+        if preClean == true {
+            print("--- ---")
+            print("\(cleanArgs.joined(separator: " "))")
+            print("--- ---")
+            if dryrun == false {
+                ProcessRunner.runCommand(cleanArgs, echo: true)
+            }
+        }
+        // build
+        print("--- ---")
         print("\(args.joined(separator: " "))")
         print("--- ---")
         if dryrun == false {
@@ -138,8 +159,14 @@ class BuildCommand: Command {
         command.name = "build"
         command.synopsis = "Build project in various ways."
 
+        var clean = CommandOption()
+        clean.shortOption = "-c"
+        clean.longOption = "--clean"
+        clean.help = "Do a clean before building."
+        command.options.append(clean)
+
         var clear = CommandOption()
-        clear.shortOption = "-c"
+        clear.shortOption = "-t"
         clear.longOption = "--clear"
         clear.help = "Delete any existing target binary before building."
         command.options.append(clear)
