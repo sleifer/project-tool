@@ -130,7 +130,7 @@ class BuildCommand: Command {
             print("\(cleanArgs.joined(separator: " "))")
             print("--- ---")
             if dryrun == false {
-                ProcessRunner.runCommand(cleanArgs, echo: true)
+                ProcessRunner.runCommand(cleanArgs, echoOutput: true)
             }
         }
         // build
@@ -138,7 +138,7 @@ class BuildCommand: Command {
         print("\(args.joined(separator: " "))")
         print("--- ---")
         if dryrun == false {
-            ProcessRunner.runCommand(args, echo: true)
+            ProcessRunner.runCommand(args, echoOutput: true)
 
             // clean up build directory
             let buildDir = projectPath.deletingLastPathComponent.appendingPathComponent("build")
