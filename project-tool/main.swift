@@ -32,6 +32,7 @@ func main() {
     core.add(command: ProjectCommand.self)
     core.add(command: BuildCommand.self)
     core.add(command: CleanupCommand.self)
+    core.add(command: VersionCommand.self)
 
     #if DEBUG
     // for testing in Xcode
