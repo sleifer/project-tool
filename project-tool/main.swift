@@ -9,7 +9,7 @@
 import Foundation
 import CommandLineCore
 
-let toolVersion = "0.1.14"
+let toolVersion = "0.1.15"
 
 func main() {
     #if DEBUG
@@ -29,9 +29,10 @@ func main() {
     root.help = "Use git repository root directory, not current."
     core.addGlobal(option: root)
 
-    core.add(command: ProjectCommand.self)
     core.add(command: BuildCommand.self)
     core.add(command: CleanupCommand.self)
+    core.add(command: ProjectCommand.self)
+    core.add(command: StampCommand.self)
     core.add(command: VersionCommand.self)
 
     #if DEBUG
