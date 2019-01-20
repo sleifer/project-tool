@@ -14,15 +14,23 @@ class VersionCommand: Command {
     }
 
     func run(cmd: ParsedCommand, core: CommandCore) {
+        var result: ProcessRunner?
         if cmd.option("--bump") != nil {
-            ProcessRunner.runCommand(["agvtool", "bump", "-all"], echoOutput: true)
+            result = ProcessRunner.runCommand(["agvtool", "bump", "-all"], echoOutput: true)
         } else if let cmd = cmd.option("--bundle") {
-            ProcessRunner.runCommand(["agvtool", "new-version", "-all", cmd.arguments[0]], echoOutput: true)
+            result = ProcessRunner.runCommand(["agvtool", "new-version", "-all", cmd.arguments[0]], echoOutput: true)
         } else if let cmd = cmd.option("--marketing") {
-            ProcessRunner.runCommand(["agvtool", "new-marketing-version", cmd.arguments[0]], echoOutput: true)
+            result = ProcessRunner.runCommand(["agvtool", "new-marketing-version", cmd.arguments[0]], echoOutput: true)
         } else {
             ProcessRunner.runCommand(["agvtool", "mvers"], echoOutput: true)
             ProcessRunner.runCommand(["agvtool", "vers"], echoOutput: true)
+        }
+
+        if let result = result, result.status == 0 {
+            let updates = result.stdOut.regex("Updated CFBundle.*/(.*-stamped\\.plist)\"")
+            for update in updates {
+                backCopyVersions(from: update[1])
+            }
         }
     }
 
@@ -52,5 +60,50 @@ class VersionCommand: Command {
         command.options.append(marketingCmd)
 
         return command
+    }
+
+    func backCopyVersions(from stampedFile: String) {
+        let dir = FileManager.default.currentDirectoryPath
+
+        if let enumerator = FileManager.default.enumerator(atPath: dir) {
+            for item in enumerator {
+                if let filePath = item as? String {
+                    if filePath.contains(stampedFile) {
+                        let srcPath = dir.appendingPathComponent(filePath)
+                        let dstPath = srcPath.replacingOccurrences(of: "-stamped", with: "")
+
+                        var bundleVersion: String?
+                        var bundleShortVersion: String?
+                        do {
+                            let inUrl = URL(fileURLWithPath: srcPath)
+                            let inData = try Data(contentsOf: inUrl)
+                            var plist = try PropertyListSerialization.propertyList(from: inData, options: [.mutableContainersAndLeaves], format: nil) as? [String: AnyObject]
+                            bundleVersion = plist?["CFBundleVersion"] as? String
+                            bundleShortVersion = plist?["CFBundleShortVersionString"] as? String
+                        } catch {
+                            print(error)
+                        }
+
+                        do {
+                            let inUrl = URL(fileURLWithPath: dstPath)
+                            let inData = try Data(contentsOf: inUrl)
+                            var plist = try PropertyListSerialization.propertyList(from: inData, options: [.mutableContainersAndLeaves], format: nil) as? [String: AnyObject]
+                            if let bundleVersion = bundleVersion {
+                                plist?["CFBundleVersion"] = bundleVersion as AnyObject
+                            }
+                            if let bundleShortVersion = bundleShortVersion {
+                                plist?["CFBundleShortVersionString"] = bundleShortVersion as AnyObject
+                            }
+                            let outData = try PropertyListSerialization.data(fromPropertyList: plist as Any, format: .xml, options: 0)
+                            let outUrl = URL(fileURLWithPath: dstPath)
+                            try outData.write(toFileURL: outUrl)
+                        } catch {
+                            print(error)
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
