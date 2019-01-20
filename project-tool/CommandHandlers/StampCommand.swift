@@ -36,7 +36,7 @@ class StampCommand: Command {
         do {
             let inUrl = URL(fileURLWithPath: srcPath)
             let inData = try Data(contentsOf: inUrl)
-            var plist = try PropertyListSerialization.propertyList(from: inData, options: [.mutableContainersAndLeaves], format: nil) as? Dictionary<String, AnyObject>
+            var plist = try PropertyListSerialization.propertyList(from: inData, options: [.mutableContainersAndLeaves], format: nil) as? [String: AnyObject]
             plist?[key] = sha as AnyObject
             let outData = try PropertyListSerialization.data(fromPropertyList: plist as Any, format: .xml, options: 0)
             let outUrl = URL(fileURLWithPath: dstPath)
