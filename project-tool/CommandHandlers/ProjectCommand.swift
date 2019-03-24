@@ -16,12 +16,13 @@ class ProjectCommand: Command {
     func run(cmd: ParsedCommand, core: CommandCore) {
         var dir = FileManager.default.currentDirectoryPath
 
+        var root = dir
+        if let path = findGitRoot() {
+            root = path
+        }
+
         if cmd.option("--root") != nil {
-            if let path = findGitRoot() {
-                dir = path
-            } else {
-                return
-            }
+            dir = root
         }
 
         if cmd.option("--finder") != nil {
@@ -34,14 +35,14 @@ class ProjectCommand: Command {
             ProcessRunner.runCommand("subl", args: [dir])
         }
         if cmd.option("--tower") != nil {
-            if FileManager.default.fileExists(atPath: dir.appendingPathComponent(".git")) == true {
-                ProcessRunner.runCommand("gittower", args: [dir])
+            if FileManager.default.fileExists(atPath: root.appendingPathComponent(".git")) == true {
+                ProcessRunner.runCommand("gittower", args: [root])
             } else {
                 print("Current directory is not the root of a git repository.")
             }
         }
         if cmd.option("--xcode") != nil {
-            openXcode(dir)
+            openXcode(root)
         }
     }
 

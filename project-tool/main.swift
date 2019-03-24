@@ -9,7 +9,7 @@
 import Foundation
 import CommandLineCore
 
-let toolVersion = "0.1.17"
+let toolVersion = "0.1.18"
 
 func main() {
     #if DEBUG
