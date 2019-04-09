@@ -9,7 +9,7 @@
 import Foundation
 import CommandLineCore
 
-let toolVersion = "0.1.18"
+let toolVersion = "0.1.19"
 
 func main() {
     #if DEBUG
@@ -32,6 +32,7 @@ func main() {
     core.add(command: BuildCommand.self)
     core.add(command: CleanupCommand.self)
     core.add(command: ProjectCommand.self)
+    core.add(command: ReadmeCommand.self)
     core.add(command: StampCommand.self)
     core.add(command: VersionCommand.self)
 

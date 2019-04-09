@@ -12,6 +12,7 @@
 		DB9B020F210E2E1600471D34 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B020E210E2E1600471D34 /* main.swift */; };
 		DB9B022E210E4D2B00471D34 /* ProjectCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */; };
 		DB9B0230210E4D4400471D34 /* BuildCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B022F210E4D4400471D34 /* BuildCommand.swift */; };
+		DBAEECCF225D53720009208C /* ReadmeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAEECCE225D53720009208C /* ReadmeCommand.swift */; };
 		DBD4F62A21ED464B00A2B7AD /* VersionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD4F62921ED464B00A2B7AD /* VersionCommand.swift */; };
 		DBD4F62C21EE2CBF00A2B7AD /* StampCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD4F62B21EE2CBF00A2B7AD /* StampCommand.swift */; };
 /* End PBXBuildFile section */
@@ -37,6 +38,7 @@
 		DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCommand.swift; sourceTree = "<group>"; };
 		DB9B022F210E4D4400471D34 /* BuildCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildCommand.swift; sourceTree = "<group>"; };
 		DB9B0233210EB36600471D34 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		DBAEECCE225D53720009208C /* ReadmeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeCommand.swift; sourceTree = "<group>"; };
 		DBD4F62921ED464B00A2B7AD /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
 		DBD4F62B21EE2CBF00A2B7AD /* StampCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampCommand.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -95,6 +97,7 @@
 				DB9B022F210E4D4400471D34 /* BuildCommand.swift */,
 				DB0B882E212B93B0005506C9 /* CleanupCommand.swift */,
 				DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */,
+				DBAEECCE225D53720009208C /* ReadmeCommand.swift */,
 				DBD4F62B21EE2CBF00A2B7AD /* StampCommand.swift */,
 				DBD4F62921ED464B00A2B7AD /* VersionCommand.swift */,
 			);
@@ -178,6 +181,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBAEECCF225D53720009208C /* ReadmeCommand.swift in Sources */,
 				DBD4F62A21ED464B00A2B7AD /* VersionCommand.swift in Sources */,
 				DB9B020F210E2E1600471D34 /* main.swift in Sources */,
 				DB9B0230210E4D4400471D34 /* BuildCommand.swift in Sources */,
