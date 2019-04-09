@@ -147,6 +147,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = DB9B0202210E2E1600471D34;
 			productRefGroup = DB9B020C210E2E1600471D34 /* Products */;
