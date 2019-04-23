@@ -9,12 +9,12 @@
 import Foundation
 import CommandLineCore
 
-let toolVersion = "0.1.19"
+let toolVersion = "0.1.20"
 
 func main() {
     #if DEBUG
     // for testing in Xcode
-    let path = "~/Documents/Code/LogbookVis".expandingTildeInPath
+    let path = "~/Documents/Code/Future".expandingTildeInPath
     FileManager.default.changeCurrentDirectoryPath(path)
     #endif
 
@@ -31,6 +31,7 @@ func main() {
 
     core.add(command: BuildCommand.self)
     core.add(command: CleanupCommand.self)
+    core.add(command: DocumentationCommand.self)
     core.add(command: ProjectCommand.self)
     core.add(command: ReadmeCommand.self)
     core.add(command: StampCommand.self)
@@ -38,7 +39,7 @@ func main() {
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "version", "-m", "1.4"]
+    let args = ["pt", "docs", "-sd"]
     #else
     let args = CommandLine.arguments
     #endif
