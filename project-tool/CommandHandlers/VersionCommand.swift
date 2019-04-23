@@ -19,9 +19,13 @@ class VersionCommand: Command {
             result = ProcessRunner.runCommand(["agvtool", "bump", "-all"], echoOutput: true)
         } else if let cmd = cmd.option("--bundle") {
             result = ProcessRunner.runCommand(["agvtool", "new-version", "-all", cmd.arguments[0]], echoOutput: true)
-        } else if let cmd = cmd.option("--marketing") {
+        }
+
+        if let cmd = cmd.option("--marketing") {
             result = ProcessRunner.runCommand(["agvtool", "new-marketing-version", cmd.arguments[0]], echoOutput: true)
-        } else {
+        }
+
+        if cmd.option("--bump") == nil && cmd.option("--bundle") == nil && cmd.option("--marketing") == nil {
             ProcessRunner.runCommand(["agvtool", "mvers"], echoOutput: true)
             ProcessRunner.runCommand(["agvtool", "vers"], echoOutput: true)
         }
