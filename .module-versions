@@ -1,4 +1,4 @@
-CommandLineCore ~> 1.4
+CommandLineCore ~> 1.5
 YamlSwift ~> 3.4
 
 // Submodule name (space) <test> (space) version
