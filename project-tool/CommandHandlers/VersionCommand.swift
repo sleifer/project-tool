@@ -26,8 +26,10 @@ class VersionCommand: Command {
         }
 
         if cmd.option("--bump") == nil && cmd.option("--bundle") == nil && cmd.option("--marketing") == nil {
-            ProcessRunner.runCommand(["agvtool", "mvers"], echoOutput: true)
-            ProcessRunner.runCommand(["agvtool", "vers"], echoOutput: true)
+            print("Marketing Version:")
+            ProcessRunner.runCommand(["agvtool", "mvers", "-terse1"], echoOutput: true)
+            print("Build Number:")
+            ProcessRunner.runCommand(["agvtool", "vers", "-terse"], echoOutput: true)
         }
 
         if let result = result, result.status == 0 {
