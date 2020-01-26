@@ -40,6 +40,34 @@ class Helpers {
         return projectDir
     }
 
+    static func getProjectInfo(_ projectPath: String) -> XcodebuildList? {
+        let isWorkspace: Bool
+        if projectPath.hasSuffix(".xcodeproj") == true {
+            isWorkspace = false
+        } else {
+            isWorkspace = true
+        }
+
+        let proc: ProcessRunner
+        if isWorkspace == false {
+            proc = ProcessRunner.runCommand("xcodebuild", args: ["-list", "-project", projectPath, "-json"])
+        } else {
+            proc = ProcessRunner.runCommand("xcodebuild", args: ["-list", "-workspace", projectPath, "-json"])
+        }
+        if proc.status == 0 {
+            let jsonStr = proc.stdOut.trimmed()
+            if let jsonData = jsonStr.data(using: .utf8) {
+                do {
+                    let decoder = JSONDecoder()
+                    return try decoder.decode(XcodebuildList.self, from: jsonData)
+                } catch {
+                    print("Error loading: \(error)")
+                }
+            }
+        }
+        return nil
+    }
+
     static func findWorkspaceScheme(_ projectPath: String) -> String? {
         let proc = ProcessRunner.runCommand("xcodebuild", args: ["-list", "-workspace", projectPath, "-json"])
         if proc.status == 0 {
@@ -97,4 +125,29 @@ class Helpers {
         }
 
         return nil
-    }}
+    }
+}
+
+class XcodebuildList: Codable {
+    var project: Project?
+    var workspace: Workspace?
+
+    var name: String {
+        return project?.name ?? workspace?.name ?? ""
+    }
+    var schemes: [String] {
+        return project?.schemes ?? workspace?.schemes ?? []
+    }
+
+    class Project: Codable {
+        var configurations: [String]
+        var name: String
+        var schemes: [String]
+        var targets: [String]
+    }
+
+    class Workspace: Codable {
+        var name: String
+        var schemes: [String]
+    }
+}

@@ -40,7 +40,7 @@ func main() {
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "xcframework"]
+    let args = ["pt", "xcframework", "--dryrun"]
     #else
     let args = CommandLine.arguments
     #endif
