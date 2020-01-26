@@ -9,12 +9,12 @@
 import Foundation
 import CommandLineCore
 
-let toolVersion = "0.1.23"
+let toolVersion = "0.1.24"
 
 func main() {
     #if DEBUG
     // for testing in Xcode
-    let path = "~/Documents/Code/Future".expandingTildeInPath
+    let path = "~/Documents/Code/RemoteLogging".expandingTildeInPath
     FileManager.default.changeCurrentDirectoryPath(path)
     #endif
 
@@ -36,10 +36,11 @@ func main() {
     core.add(command: ReadmeCommand.self)
     core.add(command: StampCommand.self)
     core.add(command: VersionCommand.self)
+    core.add(command: XcframeworkCommand.self)
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "docs", "-sd"]
+    let args = ["pt", "xcframework"]
     #else
     let args = CommandLine.arguments
     #endif
