@@ -17,7 +17,7 @@ class ProjectCommand: Command {
         var dir = FileManager.default.currentDirectoryPath
 
         var root = dir
-        if let path = findGitRoot() {
+        if let path = Helpers.findGitRoot() {
             root = path
         }
 
@@ -93,42 +93,12 @@ class ProjectCommand: Command {
         return command
     }
 
-    func findGitRoot() -> String? {
-        let proc = ProcessRunner.runCommand("git", args: ["rev-parse", "--show-toplevel"])
-        if proc.status == 0 {
-            return proc.stdOut.trimmed()
-        } else {
-            print(proc.stdErr)
-        }
-        return nil
-    }
-
     func openXcode(_ dir: String) {
-        let projectPath = findXcodeProject(dir)
+        let projectPath = Helpers.findXcodeProject(dir)
         if projectPath.count == 0 {
             print("No Xcode project in current directory.")
         } else {
             ProcessRunner.runCommand("open", args: [projectPath])
         }
-    }
-
-    func findXcodeProject(_ path: String) -> String {
-        var projectDir: String = ""
-
-        do {
-            let contents = try FileManager.default.contentsOfDirectory(atPath: path)
-            for file in contents {
-                if projectDir.count == 0 && file.hasSuffix(".xcodeproj") == true {
-                    projectDir = path.appendingPathComponent(file)
-                }
-                if file.hasSuffix(".xcworkspace") == true {
-                    projectDir = path.appendingPathComponent(file)
-                }
-            }
-        } catch {
-            print(error)
-        }
-
-        return projectDir
     }
 }

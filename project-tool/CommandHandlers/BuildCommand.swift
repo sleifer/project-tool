@@ -24,7 +24,7 @@ class BuildCommand: Command {
 
     func run(cmd: ParsedCommand, core: CommandCore) {
         if cmd.option("--root") != nil {
-            if let path = findGitRoot() {
+            if let path = Helpers.findGitRoot() {
                 dir = path
             } else {
                 return
@@ -78,14 +78,14 @@ class BuildCommand: Command {
         var args: [String] = ["xcodebuild"]
         var cleanArgs: [String] = ["xcodebuild"]
         var valid: Bool = false
-        let projectPath = findXcodeProject(dir)
+        let projectPath = Helpers.findXcodeProject(dir)
         if projectPath.count == 0 {
             print("No Xcode project in current directory.")
         } else {
             if projectPath.hasSuffix(".xcodeproj") {
                 valid = true
             } else {
-                if let scheme = findWorkspaceScheme(projectPath) {
+                if let scheme = Helpers.findWorkspaceScheme(projectPath) {
                     valid = true
                     args.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
                     cleanArgs.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
@@ -103,7 +103,7 @@ class BuildCommand: Command {
             return
         }
 
-        let dstBinaryPath = findDstBinaryPath(args)
+        let dstBinaryPath = Helpers.findDstBinaryPath(args)
         if cmd.option("--clear") != nil {
             if let path = dstBinaryPath {
                 if dryrun == false {
@@ -210,94 +210,5 @@ class BuildCommand: Command {
         command.options.append(inPassed)
 
         return command
-    }
-
-    func findGitRoot() -> String? {
-        let proc = ProcessRunner.runCommand("git", args: ["rev-parse", "--show-toplevel"])
-        if proc.status == 0 {
-            return proc.stdOut.trimmed()
-        } else {
-            print(proc.stdErr)
-        }
-        return nil
-    }
-
-    func findXcodeProject(_ path: String) -> String {
-        var projectDir: String = ""
-
-        do {
-            let contents = try FileManager.default.contentsOfDirectory(atPath: path)
-            for file in contents {
-                if projectDir.count == 0 && file.hasSuffix(".xcodeproj") == true {
-                    projectDir = path.appendingPathComponent(file)
-                }
-                if file.hasSuffix(".xcworkspace") == true {
-                    projectDir = path.appendingPathComponent(file)
-                }
-            }
-        } catch {
-            print(error)
-        }
-
-        return projectDir
-    }
-
-    fileprivate func findWorkspaceScheme(_ projectPath: String) -> String? {
-        let proc = ProcessRunner.runCommand("xcodebuild", args: ["-list", "-workspace", projectPath, "-json"])
-        if proc.status == 0 {
-            let jsonStr = proc.stdOut.trimmed()
-            if let jsonData = jsonStr.data(using: .utf8) {
-                do {
-                    let json = try JSONSerialization.jsonObject(with: jsonData, options: [])
-                    if let root = json as? [String: Any] {
-                        if let workspace = root["workspace"] as? [String: Any] {
-                            let name = workspace["name"] as? String
-                            let schemes = workspace["schemes"] as? [String]
-
-                            if let name = name, let schemes = schemes {
-                                if schemes.contains(name) == false {
-                                    return schemes[0]
-                                } else {
-                                    return name
-                                }
-                            }
-                        }
-                    }
-                } catch {
-                    print(error)
-                }
-            }
-        }
-        return nil
-    }
-
-    fileprivate func findDstBinaryPath(_ args: [String]) -> String? {
-        var targetBuildDir: String?
-        var executableName: String?
-        var envargs = args
-        envargs.append("-showBuildSettings")
-        let runner = ProcessRunner.runCommand(envargs)
-        if runner.status == 0 {
-            let lines = runner.stdOut.trimmed().lines()
-            for line in lines {
-                let trimLine = line.trimmed()
-                if trimLine.hasPrefix("TARGET_BUILD_DIR") {
-                    let parts = trimLine.components(separatedBy: " = ")
-                    if parts.count == 2 {
-                        targetBuildDir = parts[1].trimmed()
-                    }
-                } else if trimLine.hasPrefix("FULL_PRODUCT_NAME") {
-                    let parts = trimLine.components(separatedBy: " = ")
-                    if parts.count == 2 {
-                        executableName = parts[1].trimmed()
-                    }
-                }
-            }
-        }
-        if let theTargetBuildDir = targetBuildDir, let theExecutableName = executableName {
-            return theTargetBuildDir.appendingPathComponent(theExecutableName)
-        }
-
-        return nil
     }
 }

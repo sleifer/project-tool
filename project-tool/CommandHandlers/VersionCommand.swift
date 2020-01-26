@@ -83,7 +83,7 @@ class VersionCommand: Command {
                         do {
                             let inUrl = URL(fileURLWithPath: srcPath)
                             let inData = try Data(contentsOf: inUrl)
-                            var plist = try PropertyListSerialization.propertyList(from: inData, options: [.mutableContainersAndLeaves], format: nil) as? [String: AnyObject]
+                            let plist = try PropertyListSerialization.propertyList(from: inData, options: [.mutableContainersAndLeaves], format: nil) as? [String: AnyObject]
                             bundleVersion = plist?["CFBundleVersion"] as? String
                             bundleShortVersion = plist?["CFBundleShortVersionString"] as? String
                         } catch {
