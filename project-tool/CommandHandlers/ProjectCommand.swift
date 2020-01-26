@@ -34,6 +34,9 @@ class ProjectCommand: Command {
         if cmd.option("--sublime") != nil {
             ProcessRunner.runCommand("subl", args: [dir])
         }
+        if cmd.option("--bbedit") != nil {
+            ProcessRunner.runCommand("bbedit", args: [dir])
+        }
         if cmd.option("--tower") != nil {
             if FileManager.default.fileExists(atPath: root.appendingPathComponent(".git")) == true {
                 ProcessRunner.runCommand("gittower", args: [root])
@@ -50,6 +53,12 @@ class ProjectCommand: Command {
         var command = SubcommandDefinition()
         command.name = "project"
         command.synopsis = "Act on project (directory) in various ways."
+
+        var bbedit = CommandOption()
+        bbedit.shortOption = "-b"
+        bbedit.longOption = "--bbedit"
+        bbedit.help = "Open current dir in BBEdit."
+        command.options.append(bbedit)
 
         var finder = CommandOption()
         finder.shortOption = "-f"
