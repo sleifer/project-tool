@@ -52,7 +52,7 @@ class VersionCommand: Command {
         command.options.append(bumpCmd)
 
         var versionCmd = CommandOption()
-        versionCmd.shortOption = "-v"
+        versionCmd.shortOption = "-s"
         versionCmd.longOption = "--bundle"
         versionCmd.argumentCount = 1
         versionCmd.help = "Set bundle version."
