@@ -1,5 +1,6 @@
 CommandLineCore ~> 1.5
 YamlSwift ~> 3.4
+ProjectWalker ~> 1.1
 
 // Submodule name (space) <test> (space) version
 // Tests:
