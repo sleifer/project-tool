@@ -94,11 +94,10 @@ class ProjectCommand: Command {
     }
 
     func openXcode(_ dir: String) {
-        let projectPath = Helpers.findXcodeProject(dir)
-        if projectPath.count == 0 {
-            print("No Xcode project in current directory.")
-        } else {
+        if let projectPath = Helpers.findXcodeProject(dir) {
             ProcessRunner.runCommand("open", args: [projectPath])
+        } else {
+            print("No Xcode project in current directory.")
         }
     }
 }

@@ -38,8 +38,7 @@ class XcframeworkCommand: Command {
             name = nameOption.arguments[0]
         }
 
-        let projectPath = Helpers.findXcodeProject(dir)
-        if projectPath.count == 0 {
+        guard let projectPath = Helpers.findXcodeProject(dir) else {
             print("No Xcode project in current directory.")
             return
         }

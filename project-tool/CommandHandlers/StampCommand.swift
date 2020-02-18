@@ -10,21 +10,58 @@ import Cocoa
 import CommandLineCore
 
 class StampCommand: Command {
-    required init() {
-    }
+    required init() {}
 
     func run(cmd: ParsedCommand, core: CommandCore) {
-        if cmd.parameters.count < 3 {
+        if cmd.parameters.count < 1 {
             print("Missing required parameters.")
             return
         }
 
-        let key = cmd.parameters[0]
-        let srcPath = cmd.parameters[1].fullPath
-        let dstPath = cmd.parameters[2].fullPath
+        let dstPath = cmd.parameters[0].fullPath
 
-        if FileManager.default.fileExists(atPath: srcPath) == false {
-            print("Source file does not exist.")
+        var dir = FileManager.default.currentDirectoryPath
+        if cmd.boolOption("--root") == true {
+            if let path = Helpers.findGitRoot() {
+                dir = path
+            } else {
+                print("Could not find git root")
+                return
+            }
+        }
+        let baseDirUrl = URL(fileURLWithPath: dir)
+
+        let subCommand = VersionCommand()
+        subCommand.baseDirUrl = baseDirUrl
+
+        var marketingVersion: String = ""
+        var projectVersion: String = ""
+
+        do {
+            try subCommand.locateFiles()
+            try subCommand.determineVersionState()
+
+            switch subCommand.versionSystemState {
+            case .unknown:
+                print("Version unknown")
+                return
+            case .genericPresent:
+                print("Generic Versioning")
+                marketingVersion = subCommand.marketingVersion
+                projectVersion = subCommand.projectVersion
+            case .appleGenericPresent:
+                print("Apple Generic Versioning")
+                marketingVersion = subCommand.marketingVersion
+                projectVersion = subCommand.projectVersion
+            case .genericReady:
+                print("Generic Versioning not set up")
+                return
+            case .appleGenericReady:
+                print("Apple Generic Versioning not set up")
+                return
+            }
+        } catch {
+            print("Exception: \(error)")
             return
         }
 
@@ -33,16 +70,17 @@ class StampCommand: Command {
             sha += "+"
         }
 
+        let fileText = """
+        let marketingVersion: String = "\(marketingVersion)"
+        let projectVersion: String = "\(projectVersion)"
+        let gitHash: String = "\(sha)"
+        let fullVersion = "\(marketingVersion) (\(projectVersion)) <\(sha)>"
+        """
+
         do {
-            let inUrl = URL(fileURLWithPath: srcPath)
-            let inData = try Data(contentsOf: inUrl)
-            var plist = try PropertyListSerialization.propertyList(from: inData, options: [.mutableContainersAndLeaves], format: nil) as? [String: AnyObject]
-            plist?[key] = sha as AnyObject
-            let outData = try PropertyListSerialization.data(fromPropertyList: plist as Any, format: .xml, options: 0)
-            let outUrl = URL(fileURLWithPath: dstPath)
-            try outData.write(toFileURL: outUrl)
+            try fileText.write(to: URL(fileURLWithPath: dstPath), atomically: true, encoding: .utf8)
         } catch {
-            print("Error updating plist: \(error)")
+            print("Exception: \(error)")
         }
     }
 

@@ -14,7 +14,7 @@ let toolVersion = "0.1.25"
 func main() {
     #if DEBUG
     // for testing in Xcode
-    let path = "~/Documents/Code/RemoteLogging".expandingTildeInPath
+    let path = "~/Desktop/apptest".expandingTildeInPath
     FileManager.default.changeCurrentDirectoryPath(path)
     #endif
 
@@ -40,7 +40,7 @@ func main() {
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "xcframework", "--dryrun"]
+    let args = ["pt", "version", "--init"]
     #else
     let args = CommandLine.arguments
     #endif

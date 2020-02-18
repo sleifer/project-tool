@@ -18,15 +18,19 @@ class Helpers {
             print(proc.stdErr)
         }
         return nil
-    }
+        }
 
-    static func findXcodeProject(_ path: String) -> String {
-        var projectDir: String = ""
+        static func findXcodeProject(_ url: URL) -> String? {
+            return findXcodeProject(url.path)
+        }
+
+        static func findXcodeProject(_ path: String) -> String? {
+        var projectDir: String?
 
         do {
             let contents = try FileManager.default.contentsOfDirectory(atPath: path)
             for file in contents {
-                if projectDir.count == 0 && file.hasSuffix(".xcodeproj") == true {
+                if projectDir == nil && file.hasSuffix(".xcodeproj") == true {
                     projectDir = path.appendingPathComponent(file)
                 }
                 if file.hasSuffix(".xcworkspace") == true {

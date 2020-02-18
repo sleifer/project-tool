@@ -6,8 +6,8 @@
 //  Copyright © 2018 droolingcat.com. All rights reserved.
 //
 
-import Foundation
 import CommandLineCore
+import Foundation
 
 class BuildCommand: Command {
     var dir = FileManager.default.currentDirectoryPath
@@ -17,8 +17,7 @@ class BuildCommand: Command {
     var dryrun: Bool = false
     var preClean: Bool = false
 
-    required init() {
-    }
+    required init() {}
 
     // swiftlint:disable cyclomatic_complexity
 
@@ -78,25 +77,26 @@ class BuildCommand: Command {
         var args: [String] = ["xcodebuild"]
         var cleanArgs: [String] = ["xcodebuild"]
         var valid: Bool = false
-        let projectPath = Helpers.findXcodeProject(dir)
-        if projectPath.count == 0 {
-            print("No Xcode project in current directory.")
-        } else {
-            if projectPath.hasSuffix(".xcodeproj") {
-                valid = true
-            } else {
-                if let scheme = Helpers.findWorkspaceScheme(projectPath) {
-                    valid = true
-                    args.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
-                    cleanArgs.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
-                }
-            }
 
-            args.append(contentsOf: configurationFlags)
-            cleanArgs.append(contentsOf: configurationFlags)
-            args.append(contentsOf: destinationFlags)
-            cleanArgs.append(contentsOf: cleanDestinationFlags)
+        guard let projectPath = Helpers.findXcodeProject(dir) else {
+            print("No Xcode project in current directory.")
+            return
         }
+
+        if projectPath.hasSuffix(".xcodeproj") {
+            valid = true
+        } else {
+            if let scheme = Helpers.findWorkspaceScheme(projectPath) {
+                valid = true
+                args.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
+                cleanArgs.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
+            }
+        }
+
+        args.append(contentsOf: configurationFlags)
+        cleanArgs.append(contentsOf: configurationFlags)
+        args.append(contentsOf: destinationFlags)
+        cleanArgs.append(contentsOf: cleanDestinationFlags)
 
         if valid == false {
             print("Couldn't generate a valid xcodebuild command.")
@@ -146,8 +146,7 @@ class BuildCommand: Command {
             if dfm.fileExists(atPath: buildDir) == true {
                 do {
                     try dfm.removeItem(atPath: buildDir)
-                } catch {
-                }
+                } catch {}
             }
         }
     }
