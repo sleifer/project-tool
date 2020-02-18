@@ -7,7 +7,4 @@
    <FileRef
       location = "group:submodules/CommandLineCore/CommandLineCore.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:submodules/YamlSwift/Yaml.xcodeproj">
-   </FileRef>
 </Workspace>
