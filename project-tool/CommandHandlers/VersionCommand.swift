@@ -463,6 +463,7 @@ class VersionCommand: Command {
         stampPhase.outputPaths = ["$(BUILT_PRODUCTS_DIR)/versions.swift"]
         stampPhase.name = "Stamp Version"
         stampPhase.shellPath = "/bin/sh"
+        stampPhase.showEnvVarsInLog = false
         stampPhase.shellScript = """
         PATH=${PATH}:${HOME}/bin
         if which pt > /dev/null; then
@@ -683,7 +684,7 @@ class VersionCommand: Command {
             throw VersionCommandError.failed("Error: baseDirUrl not set")
         }
 
-        guard let projectPath = Helpers.findXcodeProject(baseDirUrl) else {
+        guard let projectPath = Helpers.findXcodeProject(baseDirUrl, ignoreWorkspaces: true) else {
             throw VersionCommandError.failed("Error: Could not find Xcode project")
         }
 

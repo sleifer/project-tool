@@ -20,11 +20,11 @@ class Helpers {
         return nil
         }
 
-        static func findXcodeProject(_ url: URL) -> String? {
-            return findXcodeProject(url.path)
+    static func findXcodeProject(_ url: URL, ignoreWorkspaces: Bool = false) -> String? {
+            return findXcodeProject(url.path, ignoreWorkspaces: ignoreWorkspaces)
         }
 
-        static func findXcodeProject(_ path: String) -> String? {
+        static func findXcodeProject(_ path: String, ignoreWorkspaces: Bool = false) -> String? {
         var projectDir: String?
 
         do {
@@ -33,7 +33,7 @@ class Helpers {
                 if projectDir == nil && file.hasSuffix(".xcodeproj") == true {
                     projectDir = path.appendingPathComponent(file)
                 }
-                if file.hasSuffix(".xcworkspace") == true {
+                if ignoreWorkspaces == false && file.hasSuffix(".xcworkspace") == true {
                     projectDir = path.appendingPathComponent(file)
                 }
             }

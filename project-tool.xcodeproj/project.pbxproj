@@ -43,8 +43,8 @@
 		DB23F7002110A3A40048E1E9 /* .module-versions */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".module-versions"; sourceTree = "<group>"; };
 		DB2ABB2623FC53BA008F21C3 /* ProjectWalker */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ProjectWalker; path = submodules/ProjectWalker; sourceTree = "<group>"; };
 		DB2ABB7A23FC8CAD008F21C3 /* JSONReadWrite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONReadWrite.swift; sourceTree = "<group>"; };
-		DB2ABB7E23FC98B6008F21C3 /* YamlSwift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = YamlSwift; path = submodules/YamlSwift; sourceTree = "<group>"; };
 		DB2ABB7C23FC8CC8008F21C3 /* GenericVersionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericVersionState.swift; sourceTree = "<group>"; };
+		DB2ABB7E23FC98B6008F21C3 /* YamlSwift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = YamlSwift; path = submodules/YamlSwift; sourceTree = "<group>"; };
 		DB9B020B210E2E1600471D34 /* pt */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pt; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB9B020E210E2E1600471D34 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCommand.swift; sourceTree = "<group>"; };
@@ -200,7 +200,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
