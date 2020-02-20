@@ -1,4 +1,4 @@
-CommandLineCore ~> 1.5
+CommandLineCore ~> 1.6
 YamlSwift ~> 3.4
 ProjectWalker ~> 1.1
 

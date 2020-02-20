@@ -4,7 +4,4 @@
    <FileRef
       location = "container:project-tool.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:submodules/CommandLineCore/CommandLineCore.xcodeproj">
-   </FileRef>
 </Workspace>
