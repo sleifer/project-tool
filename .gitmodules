@@ -3,7 +3,7 @@
 	url = git@github.com:sleifer/CommandLineCore.git
 [submodule "submodules/YamlSwift"]
 	path = submodules/YamlSwift
-	url = git@github.com:sleifer/YamlSwift.git
+	url = git@github.com:behrang/YamlSwift.git
 [submodule "submodules/ProjectWalker"]
 	path = submodules/ProjectWalker
 	url = git@github.com:sleifer/ProjectWalker.git
