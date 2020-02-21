@@ -12,7 +12,7 @@ import CommandLineCore
 func main() {
     #if DEBUG
     // for testing in Xcode
-    let path = "~/Desktop/apptest".expandingTildeInPath
+    let path = "~/Documents/Code/project-tool".expandingTildeInPath
     FileManager.default.changeCurrentDirectoryPath(path)
     #endif
 
@@ -38,7 +38,7 @@ func main() {
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "version", "--init"]
+    let args = ["pt", "build", "-rbc"]
     #else
     let args = CommandLine.arguments
     #endif

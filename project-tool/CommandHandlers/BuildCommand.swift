@@ -124,33 +124,88 @@ class BuildCommand: Command {
             }
         }
 
-        // clean
-        if preClean == true {
-            print("--- ---")
-            print("\(cleanArgs.joined(separator: " "))")
-            print("--- ---")
-            if dryrun == false {
-                ProcessRunner.runCommand(cleanArgs, echoOutput: true)
+        do {
+            let temporaryDirectoryURL = URL(fileURLWithPath: "/tmp")
+            let temporaryFilename = "build-\(UUID().uuidString).log"
+            let temporaryFileURL = temporaryDirectoryURL.appendingPathComponent(temporaryFilename)
+            let path = temporaryFileURL.path
+            FileManager.default.createFile(atPath: path, contents: nil, attributes: nil)
+            let logFile = try FileHandle(forWritingTo: temporaryFileURL)
+            defer {
+                logFile.closeFile()
             }
-        }
-        // build
-        print("--- ---")
-        print("\(args.joined(separator: " "))")
-        print("--- ---")
-        if dryrun == false {
-            ProcessRunner.runCommand(args, echoOutput: true)
 
-            // clean up build directory
-            var buildFolders: [String] = []
-            gatherBuildFolders(in: projectPath.deletingLastPathComponent, paths: &buildFolders, core: core)
-            let dfm = FileManager.default
-            for folder in buildFolders {
-                if dfm.fileExists(atPath: folder) == true {
-                    do {
-                        try dfm.removeItem(atPath: folder)
-                    } catch {}
+            print("---")
+            print("Writing build output to: \(path)")
+            print("--- Helpers")
+            print("open \(path)")
+            print("rm \(path)")
+            print("---")
+
+            // clean
+            if preClean == true {
+                print("--- ---")
+                print("\(cleanArgs.joined(separator: " "))")
+                print("--- ---")
+                if dryrun == false {
+                    ProcessRunner.runCommand(cleanArgs, outputHandler: { _, outStr, errStr in
+                        if let outStr = outStr {
+                            if outStr.hasPrefix("** ") {
+                                print(outStr)
+                            }
+                            if let outData = outStr.data(using: .utf8) {
+                                logFile.write(outData)
+                            }
+                        }
+                        if let errStr = errStr {
+                            if errStr.hasPrefix("** ") {
+                                print(errStr)
+                            }
+                            if let errData = errStr.data(using: .utf8) {
+                                logFile.write(errData)
+                            }
+                        }
+                    })
                 }
             }
+            // build
+            print("--- ---")
+            print("\(args.joined(separator: " "))")
+            print("--- ---")
+            if dryrun == false {
+                ProcessRunner.runCommand(args, outputHandler: { _, outStr, errStr in
+                    if let outStr = outStr {
+                        if outStr.hasPrefix("** ") {
+                            print(outStr)
+                        }
+                        if let outData = outStr.data(using: .utf8) {
+                            logFile.write(outData)
+                        }
+                    }
+                    if let errStr = errStr {
+                        if errStr.hasPrefix("** ") {
+                            print(errStr)
+                        }
+                        if let errData = errStr.data(using: .utf8) {
+                            logFile.write(errData)
+                        }
+                    }
+                })
+
+                // clean up build directory
+                var buildFolders: [String] = []
+                gatherBuildFolders(in: projectPath.deletingLastPathComponent, paths: &buildFolders, core: core)
+                let dfm = FileManager.default
+                for folder in buildFolders {
+                    if dfm.fileExists(atPath: folder) == true {
+                        do {
+                            try dfm.removeItem(atPath: folder)
+                        } catch {}
+                    }
+                }
+            }
+        } catch {
+            print(error)
         }
     }
 
@@ -232,9 +287,9 @@ class BuildCommand: Command {
                 modules.append(path)
             }
         }
-        modules = modules.map({ (text) -> String in
-            return dir.appendingPathComponent(text)
-        })
+        modules = modules.map { (text) -> String in
+            dir.appendingPathComponent(text)
+        }
 
         core.resetCurrentDir()
 
