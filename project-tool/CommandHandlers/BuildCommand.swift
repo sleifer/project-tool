@@ -138,6 +138,7 @@ class BuildCommand: Command {
             print("---")
             print("Writing build output to: \(path)")
             print("--- Helpers")
+            print("\(path)")
             print("open \(path)")
             print("rm \(path)")
             print("---")
