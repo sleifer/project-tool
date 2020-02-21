@@ -144,9 +144,15 @@ class BuildCommand: Command {
 
             // clean
             if preClean == true {
-                print("--- ---")
-                print("\(cleanArgs.joined(separator: " "))")
-                print("--- ---")
+                if let outData = "--- ---\n".data(using: .utf8) {
+                    logFile.write(outData)
+                }
+                if let outData = "\(cleanArgs.joined(separator: " "))\n".data(using: .utf8) {
+                    logFile.write(outData)
+                }
+                if let outData = "--- ---\n".data(using: .utf8) {
+                    logFile.write(outData)
+                }
                 if dryrun == false {
                     ProcessRunner.runCommand(cleanArgs, outputHandler: { _, outStr, errStr in
                         if let outStr = outStr {
@@ -169,9 +175,15 @@ class BuildCommand: Command {
                 }
             }
             // build
-            print("--- ---")
-            print("\(args.joined(separator: " "))")
-            print("--- ---")
+            if let outData = "--- ---\n".data(using: .utf8) {
+                logFile.write(outData)
+            }
+            if let outData = "\(args.joined(separator: " "))\n".data(using: .utf8) {
+                logFile.write(outData)
+            }
+            if let outData = "--- ---\n".data(using: .utf8) {
+                logFile.write(outData)
+            }
             if dryrun == false {
                 ProcessRunner.runCommand(args, outputHandler: { _, outStr, errStr in
                     if let outStr = outStr {
