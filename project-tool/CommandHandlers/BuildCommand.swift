@@ -141,12 +141,15 @@ class BuildCommand: Command {
             ProcessRunner.runCommand(args, echoOutput: true)
 
             // clean up build directory
-            let buildDir = projectPath.deletingLastPathComponent.appendingPathComponent("build")
+            var buildFolders: [String] = []
+            gatherBuildFolders(in: projectPath.deletingLastPathComponent, paths: &buildFolders, core: core)
             let dfm = FileManager.default
-            if dfm.fileExists(atPath: buildDir) == true {
-                do {
-                    try dfm.removeItem(atPath: buildDir)
-                } catch {}
+            for folder in buildFolders {
+                if dfm.fileExists(atPath: folder) == true {
+                    do {
+                        try dfm.removeItem(atPath: folder)
+                    } catch {}
+                }
             }
         }
     }
@@ -209,5 +212,34 @@ class BuildCommand: Command {
         command.options.append(inPassed)
 
         return command
+    }
+
+    func gatherBuildFolders(in dir: String, paths: inout [String], core: CommandCore) {
+        core.setCurrentDir(core.baseSubPath(dir))
+
+        if FileManager.default.fileExists(atPath: dir.appendingPathComponent("build")) == true {
+            paths.append(dir.appendingPathComponent("build"))
+        }
+
+        // get submodules
+        let runner2 = ProcessRunner.runCommand("git", args: ["submodule"])
+        let text = runner2.stdOut
+        var modules: [String] = []
+        let matches = text.regex(SubmoduleParseRegex.pattern())
+        for match in matches {
+            if match.count == SubmoduleParseRegex.count.rawValue {
+                let path = match[SubmoduleParseRegex.pathRoot.rawValue] + match[SubmoduleParseRegex.name.rawValue]
+                modules.append(path)
+            }
+        }
+        modules = modules.map({ (text) -> String in
+            return dir.appendingPathComponent(text)
+        })
+
+        core.resetCurrentDir()
+
+        for aModule in modules {
+            gatherBuildFolders(in: aModule, paths: &paths, core: core)
+        }
     }
 }
