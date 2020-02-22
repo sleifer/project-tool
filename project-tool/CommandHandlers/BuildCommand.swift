@@ -22,7 +22,7 @@ class BuildCommand: Command {
     // swiftlint:disable cyclomatic_complexity
 
     func run(cmd: ParsedCommand, core: CommandCore) {
-        if cmd.option("--root") != nil {
+        if cmd.boolOption("--root") {
             if let path = Helpers.findGitRoot() {
                 dir = path
             } else {
@@ -30,33 +30,48 @@ class BuildCommand: Command {
             }
         }
 
-        if cmd.option("--clean") != nil {
+        if cmd.boolOption("--clean") {
             preClean = true
         }
 
-        if cmd.option("--dryrun") != nil {
+        if cmd.boolOption("--dryrun") {
             dryrun = true
             print("Dry Run...")
         }
 
-        if cmd.option("--release") != nil {
+        if cmd.boolOption("--release") {
             configurationFlags = ["-configuration", "Release"]
         }
 
         var destinationPath = ""
         var dstCount = 0
 
-        if cmd.option("--applications") != nil {
+        if cmd.boolOption("--applications") {
             destinationPath = "/Applications"
             dstCount += 1
         }
-        if cmd.option("--bin") != nil {
+        if cmd.boolOption("--bin") {
             destinationPath = "~/bin".expandingTildeInPath
             dstCount += 1
         }
-        if cmd.option("--desktop") != nil {
+        if cmd.boolOption("--desktop") {
             destinationPath = "~/Desktop".expandingTildeInPath
             dstCount += 1
+        }
+        if cmd.boolOption("--install") {
+            if let installPath = try? String(contentsOf: URL(fileURLWithPath: dir).appendingPathComponent(".INSTALL_PATH")) {
+                let fullInstallPath = installPath.expandingTildeInPath
+                if FileManager.default.fileExists(atPath: fullInstallPath) == true {
+                    destinationPath = installPath
+                    dstCount += 1
+                } else {
+                    print("\(fullInstallPath) from .INSTALL_PATH is missing")
+                    return
+                }
+            } else {
+                print(".INSTALL_PATH file missing")
+                return
+            }
         }
         if let outOption = cmd.option("--out") {
             destinationPath = outOption.arguments[0]
@@ -270,6 +285,12 @@ class BuildCommand: Command {
         inDesk.longOption = "--desktop"
         inDesk.help = "Build into ~/Desktop."
         command.options.append(inDesk)
+
+        var installPathDesk = CommandOption()
+        installPathDesk.shortOption = "-i"
+        installPathDesk.longOption = "--install"
+        installPathDesk.help = "Build into path from .INSTALL_PATH file."
+        command.options.append(installPathDesk)
 
         var inPassed = CommandOption()
         inPassed.shortOption = "-o"
