@@ -62,7 +62,7 @@ class BuildCommand: Command {
             if let installPath = try? String(contentsOf: URL(fileURLWithPath: dir).appendingPathComponent(".INSTALL_PATH")) {
                 let fullInstallPath = installPath.expandingTildeInPath
                 if FileManager.default.fileExists(atPath: fullInstallPath) == true {
-                    destinationPath = installPath
+                    destinationPath = fullInstallPath
                     dstCount += 1
                 } else {
                     print("\(fullInstallPath) from .INSTALL_PATH is missing")
