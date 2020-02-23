@@ -173,7 +173,7 @@ class BuildCommand: Command {
                     ProcessRunner.runCommand(cleanArgs, outputHandler: { _, outStr, errStr in
                         if let outStr = outStr {
                             if outStr.hasPrefix("** ") {
-                                print(outStr)
+                                print(outStr.trimmed())
                             }
                             if let outData = outStr.data(using: .utf8) {
                                 logFile.write(outData)
@@ -181,7 +181,7 @@ class BuildCommand: Command {
                         }
                         if let errStr = errStr {
                             if errStr.hasPrefix("** ") {
-                                print(errStr)
+                                print(errStr.trimmed())
                             }
                             if let errData = errStr.data(using: .utf8) {
                                 logFile.write(errData)
@@ -204,7 +204,7 @@ class BuildCommand: Command {
                 ProcessRunner.runCommand(args, outputHandler: { _, outStr, errStr in
                     if let outStr = outStr {
                         if outStr.hasPrefix("** ") {
-                            print(outStr)
+                            print(outStr.trimmed())
                         }
                         if let outData = outStr.data(using: .utf8) {
                             logFile.write(outData)
@@ -212,7 +212,7 @@ class BuildCommand: Command {
                     }
                     if let errStr = errStr {
                         if errStr.hasPrefix("** ") {
-                            print(errStr)
+                            print(errStr.trimmed())
                         }
                         if let errData = errStr.data(using: .utf8) {
                             logFile.write(errData)
