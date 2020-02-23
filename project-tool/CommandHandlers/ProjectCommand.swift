@@ -45,7 +45,7 @@ class ProjectCommand: Command {
             }
         }
         if cmd.option("--xcode") != nil {
-            openXcode(root)
+            openXcode(dir)
         }
     }
 
