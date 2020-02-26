@@ -15,10 +15,15 @@
 		DB2ABB7B23FC8CAD008F21C3 /* JSONReadWrite.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2ABB7A23FC8CAD008F21C3 /* JSONReadWrite.swift */; };
 		DB2ABB7D23FC8CC8008F21C3 /* GenericVersionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2ABB7C23FC8CC8008F21C3 /* GenericVersionState.swift */; };
 		DB2ABB8023FC98FF008F21C3 /* Yaml in Frameworks */ = {isa = PBXBuildFile; productRef = DB2ABB7F23FC98FF008F21C3 /* Yaml */; };
+		DB45B4A92408008200FADD6D /* RunScriptBuildSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB45B4A82408008200FADD6D /* RunScriptBuildSetting.swift */; };
 		DB9B020F210E2E1600471D34 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B020E210E2E1600471D34 /* main.swift */; };
 		DB9B022E210E4D2B00471D34 /* ProjectCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */; };
 		DB9B0230210E4D4400471D34 /* BuildCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B022F210E4D4400471D34 /* BuildCommand.swift */; };
 		DBAEECCF225D53720009208C /* ReadmeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAEECCE225D53720009208C /* ReadmeCommand.swift */; };
+		DBB183172406AFB1002C0B1A /* RunScriptCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB183162406AFB1002C0B1A /* RunScriptCatalog.swift */; };
+		DBB183192406AFBA002C0B1A /* RunScriptEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB183182406AFBA002C0B1A /* RunScriptEntry.swift */; };
+		DBB1831B2406AFD0002C0B1A /* RunScriptCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB1831A2406AFD0002C0B1A /* RunScriptCommand.swift */; };
+		DBB1831D24075DB2002C0B1A /* RunScriptFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB1831C24075DB2002C0B1A /* RunScriptFile.swift */; };
 		DBCDF5F223DD248E00DA47EC /* XcframeworkCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCDF5F123DD248E00DA47EC /* XcframeworkCommand.swift */; };
 		DBCDF5F423DD2B4E00DA47EC /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCDF5F323DD2B4E00DA47EC /* Helpers.swift */; };
 		DBD4F62A21ED464B00A2B7AD /* VersionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD4F62921ED464B00A2B7AD /* VersionCommand.swift */; };
@@ -48,12 +53,17 @@
 		DB2ABB7A23FC8CAD008F21C3 /* JSONReadWrite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONReadWrite.swift; sourceTree = "<group>"; };
 		DB2ABB7C23FC8CC8008F21C3 /* GenericVersionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericVersionState.swift; sourceTree = "<group>"; };
 		DB2ABB7E23FC98B6008F21C3 /* YamlSwift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = YamlSwift; path = submodules/YamlSwift; sourceTree = "<group>"; };
+		DB45B4A82408008200FADD6D /* RunScriptBuildSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunScriptBuildSetting.swift; sourceTree = "<group>"; };
 		DB9B020B210E2E1600471D34 /* pt */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pt; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB9B020E210E2E1600471D34 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCommand.swift; sourceTree = "<group>"; };
 		DB9B022F210E4D4400471D34 /* BuildCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildCommand.swift; sourceTree = "<group>"; };
 		DB9B0233210EB36600471D34 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		DBAEECCE225D53720009208C /* ReadmeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeCommand.swift; sourceTree = "<group>"; };
+		DBB183162406AFB1002C0B1A /* RunScriptCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunScriptCatalog.swift; sourceTree = "<group>"; };
+		DBB183182406AFBA002C0B1A /* RunScriptEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunScriptEntry.swift; sourceTree = "<group>"; };
+		DBB1831A2406AFD0002C0B1A /* RunScriptCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunScriptCommand.swift; sourceTree = "<group>"; };
+		DBB1831C24075DB2002C0B1A /* RunScriptFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunScriptFile.swift; sourceTree = "<group>"; };
 		DBCDF5F123DD248E00DA47EC /* XcframeworkCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcframeworkCommand.swift; sourceTree = "<group>"; };
 		DBCDF5F323DD2B4E00DA47EC /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		DBD4F62921ED464B00A2B7AD /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
@@ -110,6 +120,10 @@
 			children = (
 				DB9B021E210E2ED600471D34 /* CommandHandlers */,
 				DB2ABB7C23FC8CC8008F21C3 /* GenericVersionState.swift */,
+				DBB183162406AFB1002C0B1A /* RunScriptCatalog.swift */,
+				DBB183182406AFBA002C0B1A /* RunScriptEntry.swift */,
+				DB45B4A82408008200FADD6D /* RunScriptBuildSetting.swift */,
+				DBB1831C24075DB2002C0B1A /* RunScriptFile.swift */,
 				DBCDF5F323DD2B4E00DA47EC /* Helpers.swift */,
 				DB2ABB7A23FC8CAD008F21C3 /* JSONReadWrite.swift */,
 				DB9B020E210E2E1600471D34 /* main.swift */,
@@ -125,6 +139,7 @@
 				DB234617226F67510000DF87 /* DocumentationCommand.swift */,
 				DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */,
 				DBAEECCE225D53720009208C /* ReadmeCommand.swift */,
+				DBB1831A2406AFD0002C0B1A /* RunScriptCommand.swift */,
 				DBD4F62B21EE2CBF00A2B7AD /* StampCommand.swift */,
 				DBD4F62921ED464B00A2B7AD /* VersionCommand.swift */,
 				DBCDF5F123DD248E00DA47EC /* XcframeworkCommand.swift */,
@@ -211,7 +226,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PATH=${PATH}:${HOME}/bin\nif which pt > /dev/null; then\n  pt stamp ${BUILT_PRODUCTS_DIR}/versions.swift\nelse\n  echo \"warning: pt not installed\"\nfi";
+			shellScript = "PATH=${PATH}:${HOME}/bin\nif which pt > /dev/null; then\n  pt stamp ${BUILT_PRODUCTS_DIR}/versions.swift\nelse\n  echo \"warning: pt not installed\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		DB9B0231210EB27300471D34 /* swiftlint */ = {
@@ -236,14 +251,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB2ABB7D23FC8CC8008F21C3 /* GenericVersionState.swift in Sources */,
+				DBB183192406AFBA002C0B1A /* RunScriptEntry.swift in Sources */,
 				DBAEECCF225D53720009208C /* ReadmeCommand.swift in Sources */,
+				DBB183172406AFB1002C0B1A /* RunScriptCatalog.swift in Sources */,
 				DBD4F62A21ED464B00A2B7AD /* VersionCommand.swift in Sources */,
 				DB9B020F210E2E1600471D34 /* main.swift in Sources */,
+				DB45B4A92408008200FADD6D /* RunScriptBuildSetting.swift in Sources */,
 				DBCDF5F423DD2B4E00DA47EC /* Helpers.swift in Sources */,
 				DB2ABB7B23FC8CAD008F21C3 /* JSONReadWrite.swift in Sources */,
 				DBCDF5F223DD248E00DA47EC /* XcframeworkCommand.swift in Sources */,
 				DB9B0230210E4D4400471D34 /* BuildCommand.swift in Sources */,
+				DBB1831B2406AFD0002C0B1A /* RunScriptCommand.swift in Sources */,
 				DBD4F62C21EE2CBF00A2B7AD /* StampCommand.swift in Sources */,
+				DBB1831D24075DB2002C0B1A /* RunScriptFile.swift in Sources */,
 				DB0B882F212B93B0005506C9 /* CleanupCommand.swift in Sources */,
 				DB234618226F67510000DF87 /* DocumentationCommand.swift in Sources */,
 				DB9B022E210E4D2B00471D34 /* ProjectCommand.swift in Sources */,

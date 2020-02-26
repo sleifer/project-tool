@@ -6,8 +6,8 @@
 //  Copyright © 2020 droolingcat.com. All rights reserved.
 //
 
-import Foundation
 import CommandLineCore
+import Foundation
 
 class Helpers {
     static func findGitRoot() -> String? {
@@ -18,22 +18,22 @@ class Helpers {
             print(proc.stdErr)
         }
         return nil
-        }
+    }
 
     static func findXcodeProject(_ url: URL, ignoreWorkspaces: Bool = false) -> String? {
-            return findXcodeProject(url.path, ignoreWorkspaces: ignoreWorkspaces)
-        }
+        return findXcodeProject(url.path, ignoreWorkspaces: ignoreWorkspaces)
+    }
 
-        static func findXcodeProject(_ path: String, ignoreWorkspaces: Bool = false) -> String? {
+    static func findXcodeProject(_ path: String, ignoreWorkspaces: Bool = false) -> String? {
         var projectDir: String?
 
         do {
             let contents = try FileManager.default.contentsOfDirectory(atPath: path)
             for file in contents {
-                if projectDir == nil && file.hasSuffix(".xcodeproj") == true {
+                if projectDir == nil, file.hasSuffix(".xcodeproj") == true {
                     projectDir = path.appendingPathComponent(file)
                 }
-                if ignoreWorkspaces == false && file.hasSuffix(".xcworkspace") == true {
+                if ignoreWorkspaces == false, file.hasSuffix(".xcworkspace") == true {
                     projectDir = path.appendingPathComponent(file)
                 }
             }
@@ -139,6 +139,7 @@ class XcodebuildList: Codable {
     var name: String {
         return project?.name ?? workspace?.name ?? ""
     }
+
     var schemes: [String] {
         return project?.schemes ?? workspace?.schemes ?? []
     }

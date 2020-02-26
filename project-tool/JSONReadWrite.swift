@@ -11,13 +11,16 @@ import Foundation
 protocol JSONReadWrite where Self: Codable {
     associatedtype HostClass: Codable
 
-    static func load(fromURL url: URL) -> HostClass?
-    func save(toURL url: URL)
+    static func read(contentsOf url: URL) -> HostClass?
+    func write(to url: URL)
 }
 
 extension JSONReadWrite {
-    static func load(fromURL url: URL) -> HostClass? {
+    static func read(contentsOf url: URL) -> HostClass? {
         do {
+            if FileManager.default.fileExists(atPath: url.path) == false {
+                return nil
+            }
             let data = try Data(contentsOf: url)
             let decoder = JSONDecoder()
             let object = try decoder.decode(HostClass.self, from: data)
@@ -28,7 +31,7 @@ extension JSONReadWrite {
         return nil
     }
 
-    func save(toURL url: URL) {
+    func write(to url: URL) {
         do {
             let encoder = JSONEncoder()
             let data = try encoder.encode(self)

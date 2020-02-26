@@ -615,7 +615,7 @@ class VersionCommand: Command {
         }
 
         let state = GenericVersionState(marketing: marketingVersion, project: projectVersion)
-        state.save(toURL: versionsStateFileUrl)
+        state.write(to: versionsStateFileUrl)
     }
 
     func writeAppleGenericVersion() throws {
@@ -660,7 +660,7 @@ class VersionCommand: Command {
             // generic system present
             versionSystemState = .genericPresent
 
-            if let state = GenericVersionState.load(fromURL: versionsStateFileUrl) {
+            if let state = GenericVersionState.read(contentsOf: versionsStateFileUrl) {
                 marketingVersion = state.marketingVersion
                 projectVersion = state.projectVersion
             }
