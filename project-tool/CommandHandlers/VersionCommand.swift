@@ -210,26 +210,48 @@ class VersionCommand: Command {
         do {
             try locateFiles()
             try determineVersionState()
+            try determineDerivedSourceState()
+            try determineRunScriptState()
+
+            let derivedAndRunScript = {
+                if self.derivedSourceState == .present {
+                    print("Derived Source is set up.")
+                } else {
+                    print("Derived Source not set up.")
+                }
+                if self.runScriptState == .present {
+                    print("Run script phase is set up.")
+                } else {
+                    print("Run script phase not set up.")
+                }
+            }
 
             switch versionSystemState {
             case .unknown:
                 print("Version unknown")
+                derivedAndRunScript()
             case .genericPresent:
                 print("Generic Versioning")
+                derivedAndRunScript()
+                print()
                 print("Marketing Version:")
                 print(marketingVersion)
                 print("Project Version:")
                 print(projectVersion)
             case .appleGenericPresent:
                 print("Apple Generic Versioning")
+                derivedAndRunScript()
+                print()
                 print("Marketing Version:")
                 print(marketingVersion)
                 print("Project Version:")
                 print(projectVersion)
             case .genericReady:
                 print("Generic Versioning not set up")
+                derivedAndRunScript()
             case .appleGenericReady:
                 print("Apple Generic Versioning not set up")
+                derivedAndRunScript()
             }
         } catch {
             print("Exception: \(error)")
@@ -556,12 +578,12 @@ class VersionCommand: Command {
             return
         }
 
-        let sourcesPhase = nativeTarget.getBuildPhases()?.filter({ (phase) -> Bool in
+        let sourcesPhase = nativeTarget.getBuildPhases()?.filter { (phase) -> Bool in
             if phase is PBXSourcesBuildPhase {
                 return true
             }
             return false
-            }).first
+        }.first
 
         if let theSourcesPhase = sourcesPhase {
             var found: Bool = false

@@ -147,11 +147,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DB9B0212210E2E1600471D34 /* Build configuration list for PBXNativeTarget "project-tool" */;
 			buildPhases = (
+				DB9B0231210EB27300471D34 /* swiftlint */,
 				846D7BAD166649ACA22C3E88CF28512C /* Stamp Version */,
 				DB9B0207210E2E1600471D34 /* Sources */,
 				DB9B0208210E2E1600471D34 /* Frameworks */,
 				DB9B0209210E2E1600471D34 /* CopyFiles */,
-				DB9B0231210EB27300471D34 /* swiftlint */,
 			);
 			buildRules = (
 			);
@@ -209,6 +209,7 @@
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/versions.swift",
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "PATH=${PATH}:${HOME}/bin\nif which pt > /dev/null; then\n  pt stamp ${BUILT_PRODUCTS_DIR}/versions.swift\nelse\n  echo \"warning: pt not installed\"\nfi";
 			showEnvVarsInLog = 0;
