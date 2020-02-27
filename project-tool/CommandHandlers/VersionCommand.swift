@@ -85,7 +85,7 @@ class VersionCommand: Command {
         }
 
         if handled == false {
-            reportVersions()
+            reportVersions(cmd.boolOption("--verbose"))
         }
     }
 
@@ -98,6 +98,11 @@ class VersionCommand: Command {
         initCmd.longOption = "--init"
         initCmd.help = "Initialize versioning support."
         command.options.append(initCmd)
+
+        var verboseCmd = CommandOption()
+        verboseCmd.longOption = "--verbose"
+        verboseCmd.help = "Verbose version output."
+        command.options.append(verboseCmd)
 
         var bumpCmd = CommandOption()
         bumpCmd.shortOption = "-b"
@@ -206,7 +211,7 @@ class VersionCommand: Command {
         }
     }
 
-    func reportVersions() {
+    func reportVersions(_ verbose: Bool) {
         do {
             try locateFiles()
             try determineVersionState()
@@ -215,12 +220,16 @@ class VersionCommand: Command {
 
             let derivedAndRunScript = {
                 if self.derivedSourceState == .present {
-                    print("Derived Source is set up.")
+                    if verbose == true {
+                        print("Derived Source is set up.")
+                    }
                 } else {
                     print("Derived Source not set up.")
                 }
                 if self.runScriptState == .present {
-                    print("Run script phase is set up.")
+                    if verbose == true {
+                        print("Run script phase is set up.")
+                    }
                 } else {
                     print("Run script phase not set up.")
                 }
@@ -231,7 +240,9 @@ class VersionCommand: Command {
                 print("Version unknown")
                 derivedAndRunScript()
             case .genericPresent:
-                print("Generic Versioning")
+                if verbose == true {
+                    print("Generic Versioning")
+                }
                 derivedAndRunScript()
                 print()
                 print("Marketing Version:")
@@ -239,7 +250,9 @@ class VersionCommand: Command {
                 print("Project Version:")
                 print(projectVersion)
             case .appleGenericPresent:
-                print("Apple Generic Versioning")
+                if verbose == true {
+                    print("Apple Generic Versioning")
+                }
                 derivedAndRunScript()
                 print()
                 print("Marketing Version:")
