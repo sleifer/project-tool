@@ -39,25 +39,30 @@ class StampCommand: Command {
 
         do {
             try subCommand.locateFiles()
-            try subCommand.determineVersionState()
+            if let target = subCommand.targets.first {
+                try subCommand.determineVersionState(target: target)
 
-            switch subCommand.versionSystemState {
-            case .unknown:
-                print("Version unknown")
-                return
-            case .genericPresent:
-                print("Generic Versioning")
-                marketingVersion = subCommand.marketingVersion
-                projectVersion = subCommand.projectVersion
-            case .appleGenericPresent:
-                print("Apple Generic Versioning")
-                marketingVersion = subCommand.marketingVersion
-                projectVersion = subCommand.projectVersion
-            case .genericReady:
-                print("Generic Versioning not set up")
-                return
-            case .appleGenericReady:
-                print("Apple Generic Versioning not set up")
+                switch target.versionSystemState {
+                case .unknown:
+                    print("Version unknown")
+                    return
+                case .genericPresent:
+                    print("Generic Versioning")
+                    marketingVersion = target.marketingVersion
+                    projectVersion = target.projectVersion
+                case .appleGenericPresent:
+                    print("Apple Generic Versioning")
+                    marketingVersion = target.marketingVersion
+                    projectVersion = target.projectVersion
+                case .genericReady:
+                    print("Generic Versioning not set up")
+                    return
+                case .appleGenericReady:
+                    print("Apple Generic Versioning not set up")
+                    return
+                }
+            } else {
+                print("Could not locate any targets")
                 return
             }
         } catch {

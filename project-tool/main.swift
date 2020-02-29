@@ -12,7 +12,7 @@ import CommandLineCore
 func main() {
     #if DEBUG
     // for testing in Xcode
-    let path = "~/Desktop/rstest".expandingTildeInPath
+    let path = "~/Documents/Clients/zenspirations/praying-for-mojis-app".expandingTildeInPath
     FileManager.default.changeCurrentDirectoryPath(path)
     #endif
 
@@ -39,7 +39,7 @@ func main() {
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "runscript", "RevealServer"]
+    let args = ["pt", "version"]
     #else
     let args = CommandLine.arguments
     #endif

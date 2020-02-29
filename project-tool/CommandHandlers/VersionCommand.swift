@@ -40,13 +40,7 @@ class VersionCommand: Command {
     var xcodeProjectUrl: URL?
     var versionsStateFileUrl: URL?
     var project: XcodeProject?
-    var configurations: [XCBuildConfiguration]?
-    var infoPlistFileUrl: URL?
-    var versionSystemState: VersionSystemState = .unknown
-    var marketingVersion: String = "1.0"
-    var projectVersion: String = "1"
-    var runScriptState: RunScriptState = .unknown
-    var derivedSourceState: DerivedSourceState = .unknown
+    var targets: [NativeTargetWithConfigurations] = []
 
     required init() {}
 
@@ -130,25 +124,30 @@ class VersionCommand: Command {
     func bumpProjectVersion() {
         do {
             try locateFiles()
-            try determineVersionState()
 
-            switch versionSystemState {
-            case .unknown:
-                print("Version unknown")
-            case .genericPresent:
-                print("Generic Versioning")
-                projectVersion = String((Int(projectVersion) ?? 0) + 1)
-                print("projectVersion = \(projectVersion)")
-                try writeGenericVersion()
-            case .appleGenericPresent:
-                print("Apple Generic Versioning")
-                projectVersion = String((Int(projectVersion) ?? 0) + 1)
-                print("projectVersion = \(projectVersion)")
-                try writeAppleGenericVersion()
-            case .genericReady:
-                print("Generic Versioning not set up")
-            case .appleGenericReady:
-                print("Apple Generic Versioning not set up")
+            for target in targets {
+                print("Target: \(target.target.openStepComment)")
+
+                try determineVersionState(target: target)
+
+                switch target.versionSystemState {
+                case .unknown:
+                    print("Version unknown")
+                case .genericPresent:
+                    print("Generic Versioning")
+                    target.projectVersion = String((Int(target.projectVersion) ?? 0) + 1)
+                    print("projectVersion = \(target.projectVersion)")
+                    try writeGenericVersion(target: target)
+                case .appleGenericPresent:
+                    print("Apple Generic Versioning")
+                    target.projectVersion = String((Int(target.projectVersion) ?? 0) + 1)
+                    print("projectVersion = \(target.projectVersion)")
+                    try writeAppleGenericVersion(target: target)
+                case .genericReady:
+                    print("Generic Versioning not set up")
+                case .appleGenericReady:
+                    print("Apple Generic Versioning not set up")
+                }
             }
         } catch {
             print("Exception: \(error)")
@@ -158,25 +157,30 @@ class VersionCommand: Command {
     func setProjectVersion(_ newVersion: String) {
         do {
             try locateFiles()
-            try determineVersionState()
 
-            switch versionSystemState {
-            case .unknown:
-                print("Version unknown")
-            case .genericPresent:
-                print("Generic Versioning")
-                projectVersion = newVersion
-                print("projectVersion = \(projectVersion)")
-                try writeGenericVersion()
-            case .appleGenericPresent:
-                print("Apple Generic Versioning")
-                projectVersion = newVersion
-                print("projectVersion = \(projectVersion)")
-                try writeAppleGenericVersion()
-            case .genericReady:
-                print("Generic Versioning not set up")
-            case .appleGenericReady:
-                print("Apple Generic Versioning not set up")
+            for target in targets {
+                print("Target: \(target.target.openStepComment)")
+
+                try determineVersionState(target: target)
+
+                switch target.versionSystemState {
+                case .unknown:
+                    print("Version unknown")
+                case .genericPresent:
+                    print("Generic Versioning")
+                    target.projectVersion = newVersion
+                    print("projectVersion = \(target.projectVersion)")
+                    try writeGenericVersion(target: target)
+                case .appleGenericPresent:
+                    print("Apple Generic Versioning")
+                    target.projectVersion = newVersion
+                    print("projectVersion = \(target.projectVersion)")
+                    try writeAppleGenericVersion(target: target)
+                case .genericReady:
+                    print("Generic Versioning not set up")
+                case .appleGenericReady:
+                    print("Apple Generic Versioning not set up")
+                }
             }
         } catch {
             print("Exception: \(error)")
@@ -186,47 +190,51 @@ class VersionCommand: Command {
     func setMarketingVersion(_ newVersion: String) {
         do {
             try locateFiles()
-            try determineVersionState()
 
-            switch versionSystemState {
-            case .unknown:
-                print("Version unknown")
-            case .genericPresent:
-                print("Generic Versioning")
-                marketingVersion = newVersion
-                print("marketingVersion = \(marketingVersion)")
-                try writeGenericVersion()
-            case .appleGenericPresent:
-                print("Apple Generic Versioning")
-                marketingVersion = newVersion
-                print("marketingVersion = \(marketingVersion)")
-                try writeAppleGenericVersion()
-            case .genericReady:
-                print("Generic Versioning not set up")
-            case .appleGenericReady:
-                print("Apple Generic Versioning not set up")
+            for target in targets {
+                print("Target: \(target.target.openStepComment)")
+
+                try determineVersionState(target: target)
+
+                switch target.versionSystemState {
+                case .unknown:
+                    print("Version unknown")
+                case .genericPresent:
+                    print("Generic Versioning")
+                    target.marketingVersion = newVersion
+                    print("marketingVersion = \(target.marketingVersion)")
+                    try writeGenericVersion(target: target)
+                case .appleGenericPresent:
+                    print("Apple Generic Versioning")
+                    target.marketingVersion = newVersion
+                    print("marketingVersion = \(target.marketingVersion)")
+                    try writeAppleGenericVersion(target: target)
+                case .genericReady:
+                    print("Generic Versioning not set up")
+                case .appleGenericReady:
+                    print("Apple Generic Versioning not set up")
+                }
             }
         } catch {
             print("Exception: \(error)")
         }
     }
 
+    // swiftlint:disable cyclomatic_complexity
+
     func reportVersions(_ verbose: Bool) {
         do {
             try locateFiles()
-            try determineVersionState()
-            try determineDerivedSourceState()
-            try determineRunScriptState()
 
-            let derivedAndRunScript = {
-                if self.derivedSourceState == .present {
+            let derivedAndRunScript = { (target: NativeTargetWithConfigurations) in
+                if target.derivedSourceState == .present {
                     if verbose == true {
                         print("Derived Source is set up.")
                     }
                 } else {
                     print("Derived Source not set up.")
                 }
-                if self.runScriptState == .present {
+                if target.runScriptState == .present {
                     if verbose == true {
                         print("Run script phase is set up.")
                     }
@@ -235,58 +243,73 @@ class VersionCommand: Command {
                 }
             }
 
-            switch versionSystemState {
-            case .unknown:
-                print("Version unknown")
-                derivedAndRunScript()
-            case .genericPresent:
-                if verbose == true {
-                    print("Generic Versioning")
+            for target in targets {
+                print("Target: \(target.target.openStepComment)")
+
+                try determineVersionState(target: target)
+                try determineDerivedSourceState(target: target)
+                try determineRunScriptState(target: target)
+
+                switch target.versionSystemState {
+                case .unknown:
+                    print("Version unknown")
+                    derivedAndRunScript(target)
+                case .genericPresent:
+                    if verbose == true {
+                        print("Generic Versioning")
+                    }
+                    derivedAndRunScript(target)
+                    print()
+                    print("Marketing Version: \(target.marketingVersion)")
+                    print("Project Version:   \(target.projectVersion)")
+                case .appleGenericPresent:
+                    if verbose == true {
+                        print("Apple Generic Versioning")
+                    }
+                    derivedAndRunScript(target)
+                    print()
+                    print("Marketing Version: \(target.marketingVersion)")
+                    print("Project Version:   \(target.projectVersion)")
+                case .genericReady:
+                    print("Generic Versioning not set up")
+                    derivedAndRunScript(target)
+                case .appleGenericReady:
+                    print("Apple Generic Versioning not set up")
+                    derivedAndRunScript(target)
                 }
-                derivedAndRunScript()
-                print()
-                print("Marketing Version: \(marketingVersion)")
-                print("Project Version:   \(projectVersion)")
-            case .appleGenericPresent:
-                if verbose == true {
-                    print("Apple Generic Versioning")
-                }
-                derivedAndRunScript()
-                print()
-                print("Marketing Version: \(marketingVersion)")
-                print("Project Version:   \(projectVersion)")
-            case .genericReady:
-                print("Generic Versioning not set up")
-                derivedAndRunScript()
-            case .appleGenericReady:
-                print("Apple Generic Versioning not set up")
-                derivedAndRunScript()
             }
         } catch {
             print("Exception: \(error)")
         }
     }
 
+    // swiftlint:enable cyclomatic_complexity
+
     func doInit() {
         do {
             try locateFiles()
-            try determineVersionState()
-            try determineRunScriptState()
-            try determineDerivedSourceState()
 
-            if versionSystemState == .unknown {
-                throw VersionCommandError.failed("Error: Could not determine version system state.")
-            }
-            if runScriptState == .unknown {
-                throw VersionCommandError.failed("Error: Could not determine run script state.")
-            }
-            if derivedSourceState == .unknown {
-                throw VersionCommandError.failed("Error: Could not determine derived source state.")
-            }
+            for target in targets {
+                print("Target: \(target.target.openStepComment)")
 
-            try actOnVersionState()
-            try actOnRunScriptState()
-            try actOnDerivedSourceState()
+                try determineVersionState(target: target)
+                try determineDerivedSourceState(target: target)
+                try determineRunScriptState(target: target)
+
+                if target.versionSystemState == .unknown {
+                    throw VersionCommandError.failed("Error: Could not determine version system state.")
+                }
+                if target.runScriptState == .unknown {
+                    throw VersionCommandError.failed("Error: Could not determine run script state.")
+                }
+                if target.derivedSourceState == .unknown {
+                    throw VersionCommandError.failed("Error: Could not determine derived source state.")
+                }
+
+                try actOnVersionState(target: target)
+                try actOnRunScriptState(target: target)
+                try actOnDerivedSourceState(target: target)
+            }
         } catch {
             print("Exception: \(error)")
         }
@@ -294,92 +317,101 @@ class VersionCommand: Command {
         print("Done.")
     }
 
-    func actOnVersionState() throws {
-        switch versionSystemState {
-        case .unknown:
-            throw VersionCommandError.failed("Error: Could not determine version system state.")
-        case .genericPresent:
-            print("Generic version system set up.")
-        case .appleGenericPresent:
-            print("Apple Generic version system set up.")
-        case .genericReady:
-            print("Setting up Generic version system.")
-            try setupGeneric()
-        case .appleGenericReady:
-            print("Setting up Apple Generic version system.")
-            try setupAppleGeneric()
-        }
-    }
-
-    func actOnRunScriptState() throws {
-        switch runScriptState {
-        case .unknown:
-            throw VersionCommandError.failed("Error: Could not determine run script state.")
-        case .present:
-            print("Run script phase is set up.")
-        case .ready:
-            print("Setting up run script phase.")
-            try setupRunScript()
-        }
-    }
-
-    func actOnDerivedSourceState() throws {
-        switch derivedSourceState {
-        case .unknown:
-            throw VersionCommandError.failed("Error: Could not determine derived source state.")
-        case .present:
-            print("Derived Source is set up.")
-        case .ready:
-            print("Setting up derived source.")
-            try setupDerivedSource()
-        }
-    }
-
-    func setupGeneric() throws {
-        try writeGenericVersion()
-    }
-
-    func setupAppleGeneric() throws {
-        guard let project = self.project else {
-            throw VersionCommandError.failed("Error: project not set")
-        }
-        guard let configurations = self.configurations else {
-            throw VersionCommandError.failed("Error: configurations not set")
-        }
-        guard let infoPlistFileUrl = self.infoPlistFileUrl else {
-            throw VersionCommandError.failed("Error: infoPlistFileUrl not set")
+    func locateFiles() throws {
+        if xcodeProjectUrl != nil, project != nil, targets.count != 0, versionsStateFileUrl != nil {
+            // already run, move on
+            return
         }
 
-        for configuration in configurations {
-            configuration.buildSettings?["VERSIONING_SYSTEM"] = "apple-generic" as AnyObject
-            configuration.buildSettings?["MARKETING_VERSION"] = marketingVersion as AnyObject
-            configuration.buildSettings?["CURRENT_PROJECT_VERSION"] = projectVersion as AnyObject
+        guard let baseDirUrl = self.baseDirUrl else {
+            throw VersionCommandError.failed("Error: baseDirUrl not set")
         }
 
-        try project.write(to: project.path)
-
-        let data = try Data(contentsOf: infoPlistFileUrl)
-        var plist = try PropertyListSerialization.propertyList(from: data, options: [.mutableContainersAndLeaves], format: nil) as? [String: Any]
-        plist?["CFBundleShortVersionString"] = "$(MARKETING_VERSION)"
-        plist?["CFBundleVersion"] = "$(CURRENT_PROJECT_VERSION)"
-        let outData = try PropertyListSerialization.data(fromPropertyList: plist as Any, format: .xml, options: 0)
-        try outData.write(toFileURL: infoPlistFileUrl)
-    }
-
-    func determineRunScriptState() throws {
-        guard let project = self.project else {
-            throw VersionCommandError.failed("Error: project not set")
+        guard let projectPath = Helpers.findXcodeProject(baseDirUrl, ignoreWorkspaces: true) else {
+            throw VersionCommandError.failed("Error: Could not find Xcode project")
         }
+
+        let url = URL(fileURLWithPath: projectPath)
+        xcodeProjectUrl = url
+        guard let project = XcodeProject(contentsOf: url) else {
+            throw VersionCommandError.failed("Error: Could not read Xcode project")
+        }
+        self.project = project
 
         guard let rootObject = project.object(withKey: project.rootObject) as? PBXProject else {
             throw VersionCommandError.failed("Error: Could not read root object")
         }
 
-        guard let nativeTarget = rootObject.getTargets()?.first else {
-            throw VersionCommandError.failed("Error: Could not read native target")
+        var targets: [NativeTargetWithConfigurations] = []
+
+        let nativeTargets = rootObject.getTargets()?.compactMap { (target) -> PBXNativeTarget? in
+            target as? PBXNativeTarget
         }
 
-        guard let buildPhases = nativeTarget.getBuildPhases() else {
+        for oneTarget in nativeTargets ?? [] {
+            let holder = NativeTargetWithConfigurations(target: oneTarget)
+            targets.append(holder)
+        }
+
+        targets = targets.filter { (item) -> Bool in
+            if item.configurations.count > 0 {
+                return true
+            }
+            return false
+        }
+
+        if targets.count == 0 {
+            throw VersionCommandError.failed("Error: Could not find any native targets with configurations")
+        }
+
+        self.targets = targets
+
+        versionsStateFileUrl = baseDirUrl.appendingPathComponent("versions.json")
+    }
+
+    func determineVersionState(target: NativeTargetWithConfigurations) throws {
+        if target.versionSystemState != .unknown {
+            // already run, move on
+            return
+        }
+
+        guard let versionsStateFileUrl = self.versionsStateFileUrl else {
+            throw VersionCommandError.failed("Error: versionsStateFileUrl not set")
+        }
+
+        guard let primaryConfiguration = primaryConfiguration(target: target) else {
+            throw VersionCommandError.failed("Error: Could not read configurations")
+        }
+
+        if FileManager.default.fileExists(atPath: versionsStateFileUrl.path) == true {
+            // generic system present
+            target.versionSystemState = .genericPresent
+
+            if let state = GenericVersionState.read(contentsOf: versionsStateFileUrl) {
+                target.marketingVersion = state.marketingVersion
+                target.projectVersion = state.projectVersion
+            }
+        } else if primaryConfiguration.buildSettings?.string(forKey: "VERSIONING_SYSTEM") == "apple-generic", let marketingVersion = primaryConfiguration.buildSettings?.string(forKey: "MARKETING_VERSION"), let projectVersion = primaryConfiguration.buildSettings?.string(forKey: "CURRENT_PROJECT_VERSION") {
+            // apple generic system present
+            target.versionSystemState = .appleGenericPresent
+            target.marketingVersion = marketingVersion
+            target.projectVersion = projectVersion
+        } else if let plistPath = primaryConfiguration.buildSettings?.string(forKey: "INFOPLIST_FILE"), plistPath.count > 0 {
+            // apple generic system ready
+            target.versionSystemState = .appleGenericReady
+            target.infoPlistFileUrl = xcodeProjectUrl?.deletingLastPathComponent().appendingPathComponent(plistPath)
+
+            if let listUrl = target.infoPlistFileUrl {
+                try determineVersionsFrom(plist: listUrl, target: target)
+            }
+        } else {
+            // generic system ready
+            target.versionSystemState = .genericReady
+        }
+    }
+
+    func determineRunScriptState(target: NativeTargetWithConfigurations) throws {
+        guard let buildPhases = target.target.getBuildPhases() else {
             throw VersionCommandError.failed("Error: Could not read build phases")
         }
 
@@ -387,19 +419,19 @@ class VersionCommand: Command {
             if let runPhase = phase as? PBXShellScriptBuildPhase {
                 if let script = runPhase.shellScript {
                     if script.contains("pt stamp") == true {
-                        runScriptState = .present
+                        target.runScriptState = .present
                         return
                     }
                 }
             }
         }
 
-        runScriptState = .ready
+        target.runScriptState = .ready
     }
 
     // swiftlint:disable cyclomatic_complexity
 
-    func determineDerivedSourceState() throws {
+    func determineDerivedSourceState(target: NativeTargetWithConfigurations) throws {
         guard let project = self.project else {
             throw VersionCommandError.failed("Error: project not set")
         }
@@ -412,7 +444,7 @@ class VersionCommand: Command {
             throw VersionCommandError.failed("Error: Could not read main group")
         }
 
-        derivedSourceState = .ready
+        target.derivedSourceState = .ready
 
         var derivedGroup: PBXGroup?
         var groupQueue: [PBXGroup] = [mainGroup]
@@ -451,11 +483,7 @@ class VersionCommand: Command {
             return
         }
 
-        guard let nativeTarget = rootObject.getTargets()?.first else {
-            return
-        }
-
-        guard let buildPhases = nativeTarget.getBuildPhases() else {
+        guard let buildPhases = target.target.getBuildPhases() else {
             return
         }
 
@@ -465,7 +493,7 @@ class VersionCommand: Command {
                     for file in files {
                         let fileRef = file.getFileRef()
                         if fileRef == theVersionsFileReference {
-                            derivedSourceState = .present
+                            target.derivedSourceState = .present
                             return
                         }
                     }
@@ -476,17 +504,78 @@ class VersionCommand: Command {
 
     // swiftlint:enable cyclomatic_complexity
 
-    func setupRunScript() throws {
+    func actOnVersionState(target: NativeTargetWithConfigurations) throws {
+        switch target.versionSystemState {
+        case .unknown:
+            throw VersionCommandError.failed("Error: Could not determine version system state.")
+        case .genericPresent:
+            print("Generic version system set up.")
+        case .appleGenericPresent:
+            print("Apple Generic version system set up.")
+        case .genericReady:
+            print("Setting up Generic version system.")
+            try setupGeneric(target: target)
+        case .appleGenericReady:
+            print("Setting up Apple Generic version system.")
+            try setupAppleGeneric(target: target)
+        }
+    }
+
+    func actOnRunScriptState(target: NativeTargetWithConfigurations) throws {
+        switch target.runScriptState {
+        case .unknown:
+            throw VersionCommandError.failed("Error: Could not determine run script state.")
+        case .present:
+            print("Run script phase is set up.")
+        case .ready:
+            print("Setting up run script phase.")
+            try setupRunScript(target: target)
+        }
+    }
+
+    func actOnDerivedSourceState(target: NativeTargetWithConfigurations) throws {
+        switch target.derivedSourceState {
+        case .unknown:
+            throw VersionCommandError.failed("Error: Could not determine derived source state.")
+        case .present:
+            print("Derived Source is set up.")
+        case .ready:
+            print("Setting up derived source.")
+            try setupDerivedSource(target: target)
+        }
+    }
+
+    func setupGeneric(target: NativeTargetWithConfigurations) throws {
+        try writeGenericVersion(target: target)
+    }
+
+    func setupAppleGeneric(target: NativeTargetWithConfigurations) throws {
         guard let project = self.project else {
             throw VersionCommandError.failed("Error: project not set")
         }
-
-        guard let rootObject = project.object(withKey: project.rootObject) as? PBXProject else {
-            throw VersionCommandError.failed("Error: Could not read root object")
+        guard let infoPlistFileUrl = target.infoPlistFileUrl else {
+            throw VersionCommandError.failed("Error: infoPlistFileUrl not set")
         }
 
-        guard let nativeTarget = rootObject.getTargets()?.first else {
-            throw VersionCommandError.failed("Error: Could not read native target")
+        for configuration in target.configurations {
+            configuration.buildSettings?["VERSIONING_SYSTEM"] = "apple-generic" as AnyObject
+            configuration.buildSettings?["MARKETING_VERSION"] = target.marketingVersion as AnyObject
+            configuration.buildSettings?["CURRENT_PROJECT_VERSION"] = target.projectVersion as AnyObject
+        }
+
+        try project.write(to: project.path)
+
+        let data = try Data(contentsOf: infoPlistFileUrl)
+        var plist = try PropertyListSerialization.propertyList(from: data, options: [.mutableContainersAndLeaves], format: nil) as? [String: Any]
+        plist?["CFBundleShortVersionString"] = "$(MARKETING_VERSION)"
+        plist?["CFBundleVersion"] = "$(CURRENT_PROJECT_VERSION)"
+        let outData = try PropertyListSerialization.data(fromPropertyList: plist as Any, format: .xml, options: 0)
+        try outData.write(toFileURL: infoPlistFileUrl)
+    }
+
+    func setupRunScript(target: NativeTargetWithConfigurations) throws {
+        guard let project = self.project else {
+            throw VersionCommandError.failed("Error: project not set")
         }
 
         let stampPhase = PBXShellScriptBuildPhase()
@@ -505,14 +594,14 @@ class VersionCommand: Command {
         """
 
         project.add(object: stampPhase, for: stampPhase.referenceKey)
-        nativeTarget.buildPhases?.insert(stampPhase.referenceKey, at: 0)
+        target.target.buildPhases?.insert(stampPhase.referenceKey, at: 0)
 
         try project.write(to: project.path)
     }
 
     // swiftlint:disable cyclomatic_complexity
 
-    func setupDerivedSource() throws {
+    func setupDerivedSource(target: NativeTargetWithConfigurations) throws {
         guard let project = self.project else {
             throw VersionCommandError.failed("Error: project not set")
         }
@@ -583,11 +672,7 @@ class VersionCommand: Command {
             return
         }
 
-        guard let nativeTarget = rootObject.getTargets()?.first else {
-            return
-        }
-
-        let sourcesPhase = nativeTarget.getBuildPhases()?.filter { (phase) -> Bool in
+        let sourcesPhase = target.target.getBuildPhases()?.filter { (phase) -> Bool in
             if phase is PBXSourcesBuildPhase {
                 return true
             }
@@ -618,127 +703,46 @@ class VersionCommand: Command {
 
     // swiftlint:enable cyclomatic_complexity
 
-    func writeGenericVersion() throws {
+    func writeGenericVersion(target: NativeTargetWithConfigurations) throws {
         guard let versionsStateFileUrl = self.versionsStateFileUrl else {
             throw VersionCommandError.failed("Error: versionsStateFileUrl not set")
         }
 
-        let state = GenericVersionState(marketing: marketingVersion, project: projectVersion)
+        let state = GenericVersionState(marketing: target.marketingVersion, project: target.projectVersion)
         state.write(to: versionsStateFileUrl)
     }
 
-    func writeAppleGenericVersion() throws {
+    func writeAppleGenericVersion(target: NativeTargetWithConfigurations) throws {
         guard let project = self.project else {
             throw VersionCommandError.failed("Error: project not set")
         }
-        guard let configurations = self.configurations else {
-            throw VersionCommandError.failed("Error: configurations not set")
-        }
 
-        for configuration in configurations {
-            configuration.buildSettings?["MARKETING_VERSION"] = marketingVersion as AnyObject
-            configuration.buildSettings?["CURRENT_PROJECT_VERSION"] = projectVersion as AnyObject
+        for configuration in target.configurations {
+            configuration.buildSettings?["MARKETING_VERSION"] = target.marketingVersion as AnyObject
+            configuration.buildSettings?["CURRENT_PROJECT_VERSION"] = target.projectVersion as AnyObject
         }
 
         try project.write(to: project.path)
     }
 
-    func primaryConfiguration() -> XCBuildConfiguration? {
-        let primaryConfigurationOptional = configurations?.first { (config) -> Bool in
+    func primaryConfiguration(target: NativeTargetWithConfigurations) -> XCBuildConfiguration? {
+        let primaryConfigurationOptional = target.configurations.first { (config) -> Bool in
             config.name == "Release"
-        } ?? configurations?.first
+        } ?? target.configurations.first
 
         return primaryConfigurationOptional
     }
 
-    func determineVersionState() throws {
-        if versionSystemState != .unknown {
-            // already run, move on
-            return
-        }
-
-        guard let versionsStateFileUrl = self.versionsStateFileUrl else {
-            throw VersionCommandError.failed("Error: versionsStateFileUrl not set")
-        }
-
-        guard let primaryConfiguration = primaryConfiguration() else {
-            throw VersionCommandError.failed("Error: Could not read configurations")
-        }
-
-        if FileManager.default.fileExists(atPath: versionsStateFileUrl.path) == true {
-            // generic system present
-            versionSystemState = .genericPresent
-
-            if let state = GenericVersionState.read(contentsOf: versionsStateFileUrl) {
-                marketingVersion = state.marketingVersion
-                projectVersion = state.projectVersion
-            }
-        } else if primaryConfiguration.buildSettings?.string(forKey: "VERSIONING_SYSTEM") == "apple-generic", let marketingVersion = primaryConfiguration.buildSettings?.string(forKey: "MARKETING_VERSION"), let projectVersion = primaryConfiguration.buildSettings?.string(forKey: "CURRENT_PROJECT_VERSION") {
-            // apple generic system present
-            versionSystemState = .appleGenericPresent
-            self.marketingVersion = marketingVersion
-            self.projectVersion = projectVersion
-        } else if let plistPath = primaryConfiguration.buildSettings?.string(forKey: "INFOPLIST_FILE"), plistPath.count > 0 {
-            // apple generic system ready
-            versionSystemState = .appleGenericReady
-            infoPlistFileUrl = xcodeProjectUrl?.deletingLastPathComponent().appendingPathComponent(plistPath)
-
-            if let listUrl = infoPlistFileUrl {
-                try determineVersionsFrom(plist: listUrl)
-            }
-        } else {
-            // generic system ready
-            versionSystemState = .genericReady
-        }
-    }
-
-    func determineVersionsFrom(plist listUrl: URL) throws {
+    func determineVersionsFrom(plist listUrl: URL, target: NativeTargetWithConfigurations) throws {
         let data = try Data(contentsOf: listUrl)
         let plist = try PropertyListSerialization.propertyList(from: data, options: [], format: nil)
         if let info = plist as? [String: Any] {
             if let version = info["CFBundleShortVersionString"] as? String {
-                marketingVersion = version
+                target.marketingVersion = version
             }
             if let build = info["CFBundleVersion"] as? String {
-                projectVersion = build
+                target.projectVersion = build
             }
         }
-    }
-
-    func locateFiles() throws {
-        if xcodeProjectUrl != nil, project != nil, configurations != nil, versionsStateFileUrl != nil {
-            // already run, move on
-            return
-        }
-
-        guard let baseDirUrl = self.baseDirUrl else {
-            throw VersionCommandError.failed("Error: baseDirUrl not set")
-        }
-
-        guard let projectPath = Helpers.findXcodeProject(baseDirUrl, ignoreWorkspaces: true) else {
-            throw VersionCommandError.failed("Error: Could not find Xcode project")
-        }
-
-        let url = URL(fileURLWithPath: projectPath)
-        xcodeProjectUrl = url
-        guard let project = XcodeProject(contentsOf: url) else {
-            throw VersionCommandError.failed("Error: Could not read Xcode project")
-        }
-        self.project = project
-
-        guard let rootObject = project.object(withKey: project.rootObject) as? PBXProject else {
-            throw VersionCommandError.failed("Error: Could not read root object")
-        }
-
-        guard let nativeTarget = rootObject.getTargets()?.first else {
-            throw VersionCommandError.failed("Error: Could not read native target")
-        }
-
-        guard let configurations = nativeTarget.getBuildConfigurationList()?.getBuildConfigurations(), configurations.count > 0 else {
-            throw VersionCommandError.failed("Error: Could not read configurations")
-        }
-        self.configurations = configurations
-
-        versionsStateFileUrl = baseDirUrl.appendingPathComponent("versions.json")
     }
 }

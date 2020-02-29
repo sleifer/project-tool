@@ -16,6 +16,7 @@
 		DB2ABB7D23FC8CC8008F21C3 /* GenericVersionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2ABB7C23FC8CC8008F21C3 /* GenericVersionState.swift */; };
 		DB2ABB8023FC98FF008F21C3 /* Yaml in Frameworks */ = {isa = PBXBuildFile; productRef = DB2ABB7F23FC98FF008F21C3 /* Yaml */; };
 		DB45B4A92408008200FADD6D /* RunScriptBuildSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB45B4A82408008200FADD6D /* RunScriptBuildSetting.swift */; };
+		DB492181240AC82200B0F7C3 /* NativeTargetWithConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB492180240AC82200B0F7C3 /* NativeTargetWithConfigurations.swift */; };
 		DB9B020F210E2E1600471D34 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B020E210E2E1600471D34 /* main.swift */; };
 		DB9B022E210E4D2B00471D34 /* ProjectCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */; };
 		DB9B0230210E4D4400471D34 /* BuildCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B022F210E4D4400471D34 /* BuildCommand.swift */; };
@@ -54,6 +55,7 @@
 		DB2ABB7C23FC8CC8008F21C3 /* GenericVersionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericVersionState.swift; sourceTree = "<group>"; };
 		DB2ABB7E23FC98B6008F21C3 /* YamlSwift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = YamlSwift; path = submodules/YamlSwift; sourceTree = "<group>"; };
 		DB45B4A82408008200FADD6D /* RunScriptBuildSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunScriptBuildSetting.swift; sourceTree = "<group>"; };
+		DB492180240AC82200B0F7C3 /* NativeTargetWithConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeTargetWithConfigurations.swift; sourceTree = "<group>"; };
 		DB9B020B210E2E1600471D34 /* pt */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pt; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB9B020E210E2E1600471D34 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCommand.swift; sourceTree = "<group>"; };
@@ -120,13 +122,14 @@
 			children = (
 				DB9B021E210E2ED600471D34 /* CommandHandlers */,
 				DB2ABB7C23FC8CC8008F21C3 /* GenericVersionState.swift */,
-				DBB183162406AFB1002C0B1A /* RunScriptCatalog.swift */,
-				DBB183182406AFBA002C0B1A /* RunScriptEntry.swift */,
-				DB45B4A82408008200FADD6D /* RunScriptBuildSetting.swift */,
-				DBB1831C24075DB2002C0B1A /* RunScriptFile.swift */,
 				DBCDF5F323DD2B4E00DA47EC /* Helpers.swift */,
 				DB2ABB7A23FC8CAD008F21C3 /* JSONReadWrite.swift */,
 				DB9B020E210E2E1600471D34 /* main.swift */,
+				DB492180240AC82200B0F7C3 /* NativeTargetWithConfigurations.swift */,
+				DB45B4A82408008200FADD6D /* RunScriptBuildSetting.swift */,
+				DBB183162406AFB1002C0B1A /* RunScriptCatalog.swift */,
+				DBB183182406AFBA002C0B1A /* RunScriptEntry.swift */,
+				DBB1831C24075DB2002C0B1A /* RunScriptFile.swift */,
 			);
 			path = "project-tool";
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 				DBB183192406AFBA002C0B1A /* RunScriptEntry.swift in Sources */,
 				DBAEECCF225D53720009208C /* ReadmeCommand.swift in Sources */,
 				DBB183172406AFB1002C0B1A /* RunScriptCatalog.swift in Sources */,
+				DB492181240AC82200B0F7C3 /* NativeTargetWithConfigurations.swift in Sources */,
 				DBD4F62A21ED464B00A2B7AD /* VersionCommand.swift in Sources */,
 				DB9B020F210E2E1600471D34 /* main.swift in Sources */,
 				DB45B4A92408008200FADD6D /* RunScriptBuildSetting.swift in Sources */,
