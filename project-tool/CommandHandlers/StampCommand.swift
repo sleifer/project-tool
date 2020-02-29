@@ -71,10 +71,12 @@ class StampCommand: Command {
         }
 
         let fileText = """
-        let marketingVersion: String = "\(marketingVersion)"
-        let projectVersion: String = "\(projectVersion)"
-        let gitHash: String = "\(sha)"
-        let fullVersion = "\(marketingVersion) (\(projectVersion)) <\(sha)>"
+        struct VersionStrings {
+            static let marketingVersion: String = "\(marketingVersion)"
+            static let projectVersion: String = "\(projectVersion)"
+            static let gitHash: String = "\(sha)"
+            static let fullVersion = "\(marketingVersion) (\(projectVersion)) <\(sha)>"
+        }
         """
 
         do {
