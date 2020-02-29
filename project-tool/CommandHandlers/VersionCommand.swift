@@ -245,20 +245,16 @@ class VersionCommand: Command {
                 }
                 derivedAndRunScript()
                 print()
-                print("Marketing Version:")
-                print(marketingVersion)
-                print("Project Version:")
-                print(projectVersion)
+                print("Marketing Version: \(marketingVersion)")
+                print("Project Version:   \(projectVersion)")
             case .appleGenericPresent:
                 if verbose == true {
                     print("Apple Generic Versioning")
                 }
                 derivedAndRunScript()
                 print()
-                print("Marketing Version:")
-                print(marketingVersion)
-                print("Project Version:")
-                print(projectVersion)
+                print("Marketing Version: \(marketingVersion)")
+                print("Project Version:   \(projectVersion)")
             case .genericReady:
                 print("Generic Versioning not set up")
                 derivedAndRunScript()
