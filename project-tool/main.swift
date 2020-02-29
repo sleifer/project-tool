@@ -17,7 +17,7 @@ func main() {
     #endif
 
     let core = CommandCore()
-    core.set(version: fullVersion)
+    core.set(version: VersionStrings.fullVersion)
     core.set(help: "A command-line project tool coordinator.")
     core.set(defaultCommand: "project")
 
