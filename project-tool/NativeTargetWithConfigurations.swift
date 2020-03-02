@@ -18,16 +18,29 @@ class NativeTargetWithConfigurations {
     var projectVersion: String = "1"
     var runScriptState: RunScriptState = .unknown
     var derivedSourceState: DerivedSourceState = .unknown
+    var versionsSwiftFilename: String = "versions.swift"
 
     init(target: PBXNativeTarget) {
         self.target = target
-        configurations = []
-        gatherTargets()
+        self.configurations = []
+        self.gatherTargets()
     }
 
     private func gatherTargets() {
-        if  let configurations = target.getBuildConfigurationList()?.getBuildConfigurations() {
+        if let configurations = target.getBuildConfigurationList()?.getBuildConfigurations() {
             self.configurations.append(contentsOf: configurations)
+        }
+    }
+}
+
+extension Array where Element == NativeTargetWithConfigurations {
+    func makeVersionsSwiftUnique() {
+        if self.count > 1 {
+            for (index, item) in self.enumerated() {
+                let suffix = item.target.name ?? "\(index + 1)"
+                let name = "versions \(suffix).swift".replacingOccurrences(of: " ", with: "_")
+                item.versionsSwiftFilename = name
+            }
         }
     }
 }

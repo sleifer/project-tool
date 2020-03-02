@@ -364,6 +364,8 @@ class VersionCommand: Command {
             throw VersionCommandError.failed("Error: Could not find any native targets with configurations")
         }
 
+        targets.makeVersionsSwiftUnique()
+
         self.targets = targets
 
         versionsStateFileUrl = baseDirUrl.appendingPathComponent("versions.json")
@@ -472,7 +474,7 @@ class VersionCommand: Command {
             element as? PBXFileReference
         }) {
             for childFile in childFiles {
-                if childFile.path == "versions.swift", childFile.name == nil {
+                if childFile.path == target.versionsSwiftFilename, childFile.name == nil {
                     versionsFileReference = childFile
                     break
                 }
@@ -580,14 +582,14 @@ class VersionCommand: Command {
 
         let stampPhase = PBXShellScriptBuildPhase()
         stampPhase.buildActionMask = 2147483647
-        stampPhase.outputPaths = ["$(BUILT_PRODUCTS_DIR)/versions.swift"]
+        stampPhase.outputPaths = ["$(BUILT_PRODUCTS_DIR)/\(target.versionsSwiftFilename)"]
         stampPhase.name = "Stamp Version"
         stampPhase.shellPath = "/bin/sh"
         stampPhase.showEnvVarsInLog = false
         stampPhase.shellScript = """
         PATH=${PATH}:${HOME}/bin
         if which pt > /dev/null; then
-          pt stamp ${BUILT_PRODUCTS_DIR}/versions.swift
+          pt stamp ${BUILT_PRODUCTS_DIR}/\(target.versionsSwiftFilename)
         else
           echo "warning: pt not installed"
         fi
@@ -650,7 +652,7 @@ class VersionCommand: Command {
             element as? PBXFileReference
         }) {
             for childFile in childFiles {
-                if childFile.path == "versions.swift", childFile.name == nil {
+                if childFile.path == target.versionsSwiftFilename, childFile.name == nil {
                     versionsFileReference = childFile
                     break
                 }
@@ -661,7 +663,7 @@ class VersionCommand: Command {
             let fileReference = PBXFileReference()
             fileReference.fileEncoding = 4
             fileReference.lastKnownFileType = "sourcecode.swift"
-            fileReference.path = "versions.swift"
+            fileReference.path = target.versionsSwiftFilename
             fileReference.sourceTree = "<group>"
             project.add(object: fileReference, for: fileReference.referenceKey)
             theDerivedGroup.children?.append(fileReference.referenceKey)
