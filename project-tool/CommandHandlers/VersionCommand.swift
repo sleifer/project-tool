@@ -448,29 +448,9 @@ class VersionCommand: Command {
 
         target.derivedSourceState = .ready
 
-        var derivedGroup: PBXGroup?
-        var groupQueue: [PBXGroup] = [mainGroup]
-
-        while let group = groupQueue.first {
-            groupQueue.removeFirst()
-            if group.sourceTree == "BUILT_PRODUCTS_DIR", group.path == nil {
-                derivedGroup = group
-                break
-            }
-            if let groupChildren = group.getChildren()?.compactMap({ (element) -> PBXGroup? in
-                element as? PBXGroup
-            }) {
-                groupQueue.append(contentsOf: groupChildren)
-            }
-        }
-
-        guard let theDerivedGroup = derivedGroup else {
-            return
-        }
-
         var versionsFileReference: PBXFileReference?
 
-        if let childFiles = theDerivedGroup.getChildren()?.compactMap({ (element) -> PBXFileReference? in
+        if let childFiles = mainGroup.getChildren()?.compactMap({ (element) -> PBXFileReference? in
             element as? PBXFileReference
         }) {
             for childFile in childFiles {
@@ -582,14 +562,14 @@ class VersionCommand: Command {
 
         let stampPhase = PBXShellScriptBuildPhase()
         stampPhase.buildActionMask = 2147483647
-        stampPhase.outputPaths = ["$(BUILT_PRODUCTS_DIR)/\(target.versionsSwiftFilename)"]
+        stampPhase.outputPaths = ["$(DERIVED_FILE_DIR)/\(target.versionsSwiftFilename)"]
         stampPhase.name = "Stamp Version"
         stampPhase.shellPath = "/bin/sh"
         stampPhase.showEnvVarsInLog = false
         stampPhase.shellScript = """
         PATH=${PATH}:${HOME}/bin
         if which pt > /dev/null; then
-          pt stamp ${BUILT_PRODUCTS_DIR}/\(target.versionsSwiftFilename)
+          pt stamp ${DERIVED_FILE_DIR}/\(target.versionsSwiftFilename)
         else
           echo "warning: pt not installed"
         fi
@@ -616,39 +596,9 @@ class VersionCommand: Command {
             throw VersionCommandError.failed("Error: Could not read main group")
         }
 
-        var derivedGroup: PBXGroup?
-        var groupQueue: [PBXGroup] = [mainGroup]
-
-        while let group = groupQueue.first {
-            groupQueue.removeFirst()
-            if group.sourceTree == "BUILT_PRODUCTS_DIR", group.path == nil {
-                derivedGroup = group
-                break
-            }
-            if let groupChildren = group.getChildren()?.compactMap({ (element) -> PBXGroup? in
-                element as? PBXGroup
-            }) {
-                groupQueue.append(contentsOf: groupChildren)
-            }
-        }
-
-        if derivedGroup == nil {
-            let group = PBXGroup()
-            group.name = "Derived"
-            group.children = []
-            group.sourceTree = "BUILT_PRODUCTS_DIR"
-            project.add(object: group, for: group.referenceKey)
-            mainGroup.children?.insert(group.referenceKey, at: 0)
-            derivedGroup = group
-        }
-
-        guard let theDerivedGroup = derivedGroup else {
-            return
-        }
-
         var versionsFileReference: PBXFileReference?
 
-        if let childFiles = theDerivedGroup.getChildren()?.compactMap({ (element) -> PBXFileReference? in
+        if let childFiles = mainGroup.getChildren()?.compactMap({ (element) -> PBXFileReference? in
             element as? PBXFileReference
         }) {
             for childFile in childFiles {
@@ -664,9 +614,9 @@ class VersionCommand: Command {
             fileReference.fileEncoding = 4
             fileReference.lastKnownFileType = "sourcecode.swift"
             fileReference.path = target.versionsSwiftFilename
-            fileReference.sourceTree = "<group>"
+            fileReference.sourceTree = "DERIVED_FILE_DIR"
             project.add(object: fileReference, for: fileReference.referenceKey)
-            theDerivedGroup.children?.append(fileReference.referenceKey)
+            mainGroup.children?.insert(fileReference.referenceKey, at: 0)
             versionsFileReference = fileReference
         }
 
