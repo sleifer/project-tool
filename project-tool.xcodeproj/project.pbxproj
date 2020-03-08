@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D10D77976E8D4CF9BD18433B17C300D7 /* versions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A815D0021A40CE896348374F1B1091 /* versions.swift */; };
+		62435A7D4E7A420BBC264CBEC178BB6D /* versions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5EE44463374D9891BDFDBA59766433 /* versions.swift */; };
 		DB0B882F212B93B0005506C9 /* CleanupCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0B882E212B93B0005506C9 /* CleanupCommand.swift */; };
 		DB234618226F67510000DF87 /* DocumentationCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB234617226F67510000DF87 /* DocumentationCommand.swift */; };
 		DB28586423FEBFBC00520D9D /* CommandLineCore in Frameworks */ = {isa = PBXBuildFile; productRef = DB28586323FEBFBC00520D9D /* CommandLineCore */; };
@@ -44,7 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B0A815D0021A40CE896348374F1B1091 /* versions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = versions.swift; sourceTree = "<group>"; };
+		6D5EE44463374D9891BDFDBA59766433 /* versions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = versions.swift; sourceTree = DERIVED_FILE_DIR; };
 		DB0B882E212B93B0005506C9 /* CleanupCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupCommand.swift; sourceTree = "<group>"; };
 		DB234617226F67510000DF87 /* DocumentationCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentationCommand.swift; sourceTree = "<group>"; };
 		DB23F6FC211099660048E1E9 /* libCommandLineCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libCommandLineCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,7 +97,7 @@
 		DB9B0202210E2E1600471D34 = {
 			isa = PBXGroup;
 			children = (
-				F9E28CE4F23D43C39EC6C67D2364492A /* Derived */,
+				6D5EE44463374D9891BDFDBA59766433 /* versions.swift */,
 				DB23F7002110A3A40048E1E9 /* .module-versions */,
 				DB9B0233210EB36600471D34 /* .swiftlint.yml */,
 				DB28586223FEBFB400520D9D /* CommandLineCore */,
@@ -149,14 +149,6 @@
 			);
 			path = CommandHandlers;
 			sourceTree = "<group>";
-		};
-		F9E28CE4F23D43C39EC6C67D2364492A /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				B0A815D0021A40CE896348374F1B1091 /* versions.swift */,
-			);
-			name = Derived;
-			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXGroup section */
 
@@ -225,11 +217,11 @@
 			buildActionMask = 2147483647;
 			name = "Stamp Version";
 			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/versions.swift",
+				"$(DERIVED_FILE_DIR)/versions.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PATH=${PATH}:${HOME}/bin\nif which pt > /dev/null; then\n  pt stamp ${BUILT_PRODUCTS_DIR}/versions.swift\nelse\n  echo \"warning: pt not installed\"\nfi\n";
+			shellScript = "PATH=${PATH}:${HOME}/bin\nif which pt > /dev/null; then\n  pt stamp ${DERIVED_FILE_DIR}/versions.swift\nelse\n  echo \"warning: pt not installed\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		DB9B0231210EB27300471D34 /* swiftlint */ = {
@@ -271,7 +263,7 @@
 				DB0B882F212B93B0005506C9 /* CleanupCommand.swift in Sources */,
 				DB234618226F67510000DF87 /* DocumentationCommand.swift in Sources */,
 				DB9B022E210E4D2B00471D34 /* ProjectCommand.swift in Sources */,
-				D10D77976E8D4CF9BD18433B17C300D7 /* versions.swift in Sources */,
+				62435A7D4E7A420BBC264CBEC178BB6D /* versions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
