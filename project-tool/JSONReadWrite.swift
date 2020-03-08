@@ -34,6 +34,7 @@ extension JSONReadWrite {
     func write(to url: URL) {
         do {
             let encoder = JSONEncoder()
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
             let data = try encoder.encode(self)
             try data.write(to: url, options: [.atomic])
         } catch {
