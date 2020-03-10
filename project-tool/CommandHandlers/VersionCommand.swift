@@ -354,6 +354,9 @@ class VersionCommand: Command {
         }
 
         targets = targets.filter { (item) -> Bool in
+            if item.target.productType == "com.apple.product-type.bundle.unit-test" {
+                return false
+            }
             if item.configurations.count > 0 {
                 return true
             }
