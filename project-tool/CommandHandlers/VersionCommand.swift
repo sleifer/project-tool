@@ -59,7 +59,8 @@ class VersionCommand: Command {
         baseDirUrl = URL(fileURLWithPath: dir)
 
         if cmd.boolOption("--init") == true {
-            doInit()
+            let agvonly = cmd.boolOption("--agvonly")
+            doInit(agvonly)
             return
         }
 
@@ -92,6 +93,12 @@ class VersionCommand: Command {
         initCmd.longOption = "--init"
         initCmd.help = "Initialize versioning support."
         command.options.append(initCmd)
+
+        var agvonlyCmd = CommandOption()
+        agvonlyCmd.shortOption = "-a"
+        agvonlyCmd.longOption = "--agvonly"
+        agvonlyCmd.help = "Only set up AGV, not stamp phase or derived file."
+        command.options.append(agvonlyCmd)
 
         var verboseCmd = CommandOption()
         verboseCmd.longOption = "--verbose"
@@ -285,7 +292,7 @@ class VersionCommand: Command {
 
     // swiftlint:enable cyclomatic_complexity
 
-    func doInit() {
+    func doInit(_ agvOnly: Bool = false) {
         do {
             try locateFiles()
 
@@ -293,22 +300,28 @@ class VersionCommand: Command {
                 print("Target: \(target.target.openStepComment)")
 
                 try determineVersionState(target: target)
-                try determineDerivedSourceState(target: target)
-                try determineRunScriptState(target: target)
+                if agvOnly == false {
+                    try determineDerivedSourceState(target: target)
+                    try determineRunScriptState(target: target)
+                }
 
                 if target.versionSystemState == .unknown {
                     throw VersionCommandError.failed("Error: Could not determine version system state.")
                 }
-                if target.runScriptState == .unknown {
-                    throw VersionCommandError.failed("Error: Could not determine run script state.")
-                }
-                if target.derivedSourceState == .unknown {
-                    throw VersionCommandError.failed("Error: Could not determine derived source state.")
+                if agvOnly == false {
+                    if target.runScriptState == .unknown {
+                        throw VersionCommandError.failed("Error: Could not determine run script state.")
+                    }
+                    if target.derivedSourceState == .unknown {
+                        throw VersionCommandError.failed("Error: Could not determine derived source state.")
+                    }
                 }
 
-                try actOnVersionState(target: target)
-                try actOnRunScriptState(target: target)
-                try actOnDerivedSourceState(target: target)
+                try actOnVersionState(target: target, agvOnly: agvOnly)
+                if agvOnly == false {
+                    try actOnRunScriptState(target: target)
+                    try actOnDerivedSourceState(target: target)
+                }
             }
         } catch {
             print("Exception: \(error)")
@@ -489,7 +502,7 @@ class VersionCommand: Command {
 
     // swiftlint:enable cyclomatic_complexity
 
-    func actOnVersionState(target: NativeTargetWithConfigurations) throws {
+    func actOnVersionState(target: NativeTargetWithConfigurations, agvOnly: Bool = false) throws {
         switch target.versionSystemState {
         case .unknown:
             throw VersionCommandError.failed("Error: Could not determine version system state.")
@@ -498,8 +511,12 @@ class VersionCommand: Command {
         case .appleGenericPresent:
             print("Apple Generic version system set up.")
         case .genericReady:
-            print("Setting up Generic version system.")
-            try setupGeneric(target: target)
+            if agvOnly == false {
+                print("Setting up Generic version system.")
+                try setupGeneric(target: target)
+            } else {
+                print("Skipping set up of Generic version system.")
+            }
         case .appleGenericReady:
             print("Setting up Apple Generic version system.")
             try setupAppleGeneric(target: target)
