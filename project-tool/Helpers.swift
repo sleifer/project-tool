@@ -101,6 +101,78 @@ class Helpers {
         return nil
     }
 
+    static func findProjectTargets(_ projectPath: String) -> [String] {
+        let proc = ProcessRunner.runCommand("xcodebuild", args: ["-list", "-project", projectPath, "-json"])
+        if proc.status == 0 {
+            let jsonStr = proc.stdOut.trimmed()
+            if let jsonData = jsonStr.data(using: .utf8) {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: jsonData, options: [])
+                    if let root = json as? [String: Any] {
+                        if let workspace = root["workspace"] as? [String: Any] {
+                            let targets = workspace["targetd"] as? [String]
+
+                            if let targets = targets {
+                                return targets
+                            }
+                        }
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+        }
+        return []
+    }
+
+    static func findProjectSchemes(_ projectPath: String) -> [String] {
+        let proc = ProcessRunner.runCommand("xcodebuild", args: ["-list", "-project", projectPath, "-json"])
+        if proc.status == 0 {
+            let jsonStr = proc.stdOut.trimmed()
+            if let jsonData = jsonStr.data(using: .utf8) {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: jsonData, options: [])
+                    if let root = json as? [String: Any] {
+                        if let workspace = root["workspace"] as? [String: Any] {
+                            let schemes = workspace["schemes"] as? [String]
+
+                            if let schemes = schemes {
+                                return schemes
+                            }
+                        }
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+        }
+        return []
+    }
+
+    static func findWorkspaceSchemes(_ projectPath: String) -> [String] {
+        let proc = ProcessRunner.runCommand("xcodebuild", args: ["-list", "-workspace", projectPath, "-json"])
+        if proc.status == 0 {
+            let jsonStr = proc.stdOut.trimmed()
+            if let jsonData = jsonStr.data(using: .utf8) {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: jsonData, options: [])
+                    if let root = json as? [String: Any] {
+                        if let workspace = root["workspace"] as? [String: Any] {
+                            let schemes = workspace["schemes"] as? [String]
+
+                            if let schemes = schemes {
+                                return schemes
+                            }
+                        }
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+        }
+        return []
+    }
+
     static func findDstBinaryPath(_ args: [String]) -> String? {
         var targetBuildDir: String?
         var executableName: String?

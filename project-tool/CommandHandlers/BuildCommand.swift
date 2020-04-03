@@ -99,13 +99,26 @@ class BuildCommand: Command {
         }
 
         if projectPath.hasSuffix(".xcodeproj") {
-            valid = true
-        } else {
-            if let scheme = Helpers.findWorkspaceScheme(projectPath) {
+            if let targetOption = cmd.option("--target") {
+                let target = targetOption.arguments[0]
+                args.append(contentsOf: ["-target", target])
+                cleanArgs.append(contentsOf: ["-target", target])
                 valid = true
-                args.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
-                cleanArgs.append(contentsOf: ["-workspace", projectPath, "-scheme", scheme])
+            } else if let schemeOption = cmd.option("--scheme") {
+                let scheme = schemeOption.arguments[0]
+                args.append(contentsOf: ["-scheme", scheme])
+                cleanArgs.append(contentsOf: ["-scheme", scheme])
+                valid = true
             }
+        } else {
+            if let schemeOption = cmd.option("--scheme") {
+                let scheme = schemeOption.arguments[0]
+                args.append(contentsOf: ["-scheme", scheme])
+                cleanArgs.append(contentsOf: ["-scheme", scheme])
+                valid = true
+            }
+            args.append(contentsOf: ["-workspace", projectPath])
+            cleanArgs.append(contentsOf: ["-workspace", projectPath])
         }
 
         args.append(contentsOf: configurationFlags)
@@ -114,7 +127,7 @@ class BuildCommand: Command {
         cleanArgs.append(contentsOf: cleanDestinationFlags)
 
         if valid == false {
-            print("Couldn't generate a valid xcodebuild command.")
+            print("Couldn't generate a valid xcodebuild command, make sure a target or scheme is specified.")
             return
         }
 
@@ -250,8 +263,43 @@ class BuildCommand: Command {
         clean.help = "Do a clean before building."
         command.options.append(clean)
 
+        var target = CommandOption()
+        target.shortOption = "-t"
+        target.longOption = "--target"
+        target.argumentCount = 1
+        target.help = "Specify target to build."
+        target.completionCallback = { () -> [String] in
+            if let path = Helpers.findXcodeProject(FileManager.default.currentDirectoryPath) {
+                if path.hasSuffix(".xcodeproj") {
+                    let targets = Helpers.findProjectTargets(path)
+                    return targets
+                }
+            }
+            return []
+        }
+        command.options.append(target)
+
+        var scheme = CommandOption()
+        scheme.shortOption = "-s"
+        scheme.longOption = "--scheme"
+        scheme.argumentCount = 1
+        scheme.help = "Specify scheme to build."
+        scheme.completionCallback = { () -> [String] in
+            if let path = Helpers.findXcodeProject(FileManager.default.currentDirectoryPath) {
+                if path.hasSuffix(".xcodeproj") {
+                    let schemes = Helpers.findProjectSchemes(path)
+                    return schemes
+                } else {
+                    let schemes = Helpers.findWorkspaceSchemes(path)
+                    return schemes
+                }
+            }
+            return []
+        }
+        command.options.append(scheme)
+
         var clear = CommandOption()
-        clear.shortOption = "-t"
+        clear.shortOption = "-l"
         clear.longOption = "--clear"
         clear.help = "Delete any existing target binary before building."
         command.options.append(clear)
