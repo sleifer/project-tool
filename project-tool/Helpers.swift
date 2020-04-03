@@ -109,8 +109,8 @@ class Helpers {
                 do {
                     let json = try JSONSerialization.jsonObject(with: jsonData, options: [])
                     if let root = json as? [String: Any] {
-                        if let workspace = root["workspace"] as? [String: Any] {
-                            let targets = workspace["targetd"] as? [String]
+                        if let workspace = root["project"] as? [String: Any] {
+                            let targets = workspace["targets"] as? [String]
 
                             if let targets = targets {
                                 return targets
@@ -133,7 +133,7 @@ class Helpers {
                 do {
                     let json = try JSONSerialization.jsonObject(with: jsonData, options: [])
                     if let root = json as? [String: Any] {
-                        if let workspace = root["workspace"] as? [String: Any] {
+                        if let workspace = root["project"] as? [String: Any] {
                             let schemes = workspace["schemes"] as? [String]
 
                             if let schemes = schemes {

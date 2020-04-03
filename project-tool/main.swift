@@ -12,7 +12,7 @@ import CommandLineCore
 func main() {
     #if DEBUG
     // for testing in Xcode
-    let path = "~/Documents/Clients/zenspirations/praying-for-mojis-app".expandingTildeInPath
+    let path = "~/Documents/Code/NetCmdLog".expandingTildeInPath
     FileManager.default.changeCurrentDirectoryPath(path)
     #endif
 
@@ -39,7 +39,7 @@ func main() {
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "version"]
+    let args = ["pt", "zshcomp", "pt build -rdcl --scheme ", "", "5", "5", "pt", "build", "-rdcl", "--scheme"]
     #else
     let args = CommandLine.arguments
     #endif
