@@ -15,6 +15,8 @@
 		DB2ABB7B23FC8CAD008F21C3 /* JSONReadWrite.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2ABB7A23FC8CAD008F21C3 /* JSONReadWrite.swift */; };
 		DB2ABB7D23FC8CC8008F21C3 /* GenericVersionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2ABB7C23FC8CC8008F21C3 /* GenericVersionState.swift */; };
 		DB2ABB8023FC98FF008F21C3 /* Yaml in Frameworks */ = {isa = PBXBuildFile; productRef = DB2ABB7F23FC98FF008F21C3 /* Yaml */; };
+		DB401C4F2438CD5F00003889 /* TargetsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB401C4E2438CD5F00003889 /* TargetsCommand.swift */; };
+		DB401C512438CD7100003889 /* SchemesCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB401C502438CD7100003889 /* SchemesCommand.swift */; };
 		DB45B4A92408008200FADD6D /* RunScriptBuildSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB45B4A82408008200FADD6D /* RunScriptBuildSetting.swift */; };
 		DB492181240AC82200B0F7C3 /* NativeTargetWithConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB492180240AC82200B0F7C3 /* NativeTargetWithConfigurations.swift */; };
 		DB9B020F210E2E1600471D34 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B020E210E2E1600471D34 /* main.swift */; };
@@ -54,6 +56,8 @@
 		DB2ABB7A23FC8CAD008F21C3 /* JSONReadWrite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONReadWrite.swift; sourceTree = "<group>"; };
 		DB2ABB7C23FC8CC8008F21C3 /* GenericVersionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericVersionState.swift; sourceTree = "<group>"; };
 		DB2ABB7E23FC98B6008F21C3 /* YamlSwift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = YamlSwift; path = submodules/YamlSwift; sourceTree = "<group>"; };
+		DB401C4E2438CD5F00003889 /* TargetsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetsCommand.swift; sourceTree = "<group>"; };
+		DB401C502438CD7100003889 /* SchemesCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemesCommand.swift; sourceTree = "<group>"; };
 		DB45B4A82408008200FADD6D /* RunScriptBuildSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunScriptBuildSetting.swift; sourceTree = "<group>"; };
 		DB492180240AC82200B0F7C3 /* NativeTargetWithConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeTargetWithConfigurations.swift; sourceTree = "<group>"; };
 		DB9B020B210E2E1600471D34 /* pt */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pt; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -143,7 +147,9 @@
 				DB9B022D210E4D2B00471D34 /* ProjectCommand.swift */,
 				DBAEECCE225D53720009208C /* ReadmeCommand.swift */,
 				DBB1831A2406AFD0002C0B1A /* RunScriptCommand.swift */,
+				DB401C502438CD7100003889 /* SchemesCommand.swift */,
 				DBD4F62B21EE2CBF00A2B7AD /* StampCommand.swift */,
+				DB401C4E2438CD5F00003889 /* TargetsCommand.swift */,
 				DBD4F62921ED464B00A2B7AD /* VersionCommand.swift */,
 				DBCDF5F123DD248E00DA47EC /* XcframeworkCommand.swift */,
 			);
@@ -253,6 +259,7 @@
 				DBD4F62A21ED464B00A2B7AD /* VersionCommand.swift in Sources */,
 				DB9B020F210E2E1600471D34 /* main.swift in Sources */,
 				DB45B4A92408008200FADD6D /* RunScriptBuildSetting.swift in Sources */,
+				DB401C4F2438CD5F00003889 /* TargetsCommand.swift in Sources */,
 				DBCDF5F423DD2B4E00DA47EC /* Helpers.swift in Sources */,
 				DB2ABB7B23FC8CAD008F21C3 /* JSONReadWrite.swift in Sources */,
 				DBCDF5F223DD248E00DA47EC /* XcframeworkCommand.swift in Sources */,
@@ -262,6 +269,7 @@
 				DBB1831D24075DB2002C0B1A /* RunScriptFile.swift in Sources */,
 				DB0B882F212B93B0005506C9 /* CleanupCommand.swift in Sources */,
 				DB234618226F67510000DF87 /* DocumentationCommand.swift in Sources */,
+				DB401C512438CD7100003889 /* SchemesCommand.swift in Sources */,
 				DB9B022E210E4D2B00471D34 /* ProjectCommand.swift in Sources */,
 				62435A7D4E7A420BBC264CBEC178BB6D /* versions.swift in Sources */,
 			);

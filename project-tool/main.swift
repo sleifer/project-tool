@@ -12,7 +12,7 @@ import CommandLineCore
 func main() {
     #if DEBUG
     // for testing in Xcode
-    let path = "~/Documents/Code/NetCmdLog".expandingTildeInPath
+    let path = "~/Documents/Code/project-tool".expandingTildeInPath
     FileManager.default.changeCurrentDirectoryPath(path)
     #endif
 
@@ -33,13 +33,15 @@ func main() {
     core.add(command: ProjectCommand.self)
     core.add(command: ReadmeCommand.self)
     core.add(command: RunScriptCommand.self)
+    core.add(command: SchemesCommand.self)
     core.add(command: StampCommand.self)
+    core.add(command: TargetsCommand.self)
     core.add(command: VersionCommand.self)
     core.add(command: XcframeworkCommand.self)
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "zshcomp", "pt build -rdcl --scheme ", "", "5", "5", "pt", "build", "-rdcl", "--scheme"]
+    let args = ["pt", "schemes"]
     #else
     let args = CommandLine.arguments
     #endif
