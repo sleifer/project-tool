@@ -41,6 +41,7 @@ class VersionCommand: Command {
     var versionsStateFileUrl: URL?
     var project: XcodeProject?
     var targets: [NativeTargetWithConfigurations] = []
+    var targetFilter: [String] = []
 
     required init() {}
 
@@ -63,6 +64,8 @@ class VersionCommand: Command {
             doInit(agvonly)
             return
         }
+
+        targetFilter = cmd.parameters
 
         var handled: Bool = false
 
@@ -125,6 +128,18 @@ class VersionCommand: Command {
         marketingCmd.help = "Set marketing version"
         command.options.append(marketingCmd)
 
+        var dst = ParameterInfo()
+        dst.hint = "target"
+        dst.help = "Target(s) to act on"
+        dst.completionCallback = { () -> [String] in
+            if let proj = Helpers.findXcodeProject(FileManager.default.currentDirectoryPath, ignoreWorkspaces: true) {
+                let targets = Helpers.findProjectTargets(proj)
+                return targets.sorted()
+            }
+            return []
+        }
+        command.optionalParameters.append(dst)
+
         return command
     }
 
@@ -133,27 +148,29 @@ class VersionCommand: Command {
             try locateFiles()
 
             for target in targets {
-                print("Target: \(target.target.openStepComment)")
+                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true {
+                    print("Target: \(target.target.openStepComment)")
 
-                try determineVersionState(target: target)
+                    try determineVersionState(target: target)
 
-                switch target.versionSystemState {
-                case .unknown:
-                    print("Version unknown")
-                case .genericPresent:
-                    print("Generic Versioning")
-                    target.projectVersion = String((Int(target.projectVersion) ?? 0) + 1)
-                    print("projectVersion = \(target.projectVersion)")
-                    try writeGenericVersion(target: target)
-                case .appleGenericPresent:
-                    print("Apple Generic Versioning")
-                    target.projectVersion = String((Int(target.projectVersion) ?? 0) + 1)
-                    print("projectVersion = \(target.projectVersion)")
-                    try writeAppleGenericVersion(target: target)
-                case .genericReady:
-                    print("Generic Versioning not set up")
-                case .appleGenericReady:
-                    print("Apple Generic Versioning not set up")
+                    switch target.versionSystemState {
+                    case .unknown:
+                        print("Version unknown")
+                    case .genericPresent:
+                        print("Generic Versioning")
+                        target.projectVersion = String((Int(target.projectVersion) ?? 0) + 1)
+                        print("projectVersion = \(target.projectVersion)")
+                        try writeGenericVersion(target: target)
+                    case .appleGenericPresent:
+                        print("Apple Generic Versioning")
+                        target.projectVersion = String((Int(target.projectVersion) ?? 0) + 1)
+                        print("projectVersion = \(target.projectVersion)")
+                        try writeAppleGenericVersion(target: target)
+                    case .genericReady:
+                        print("Generic Versioning not set up")
+                    case .appleGenericReady:
+                        print("Apple Generic Versioning not set up")
+                    }
                 }
             }
         } catch {
@@ -166,27 +183,28 @@ class VersionCommand: Command {
             try locateFiles()
 
             for target in targets {
-                print("Target: \(target.target.openStepComment)")
+                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true { print("Target: \(target.target.openStepComment)")
 
-                try determineVersionState(target: target)
+                    try determineVersionState(target: target)
 
-                switch target.versionSystemState {
-                case .unknown:
-                    print("Version unknown")
-                case .genericPresent:
-                    print("Generic Versioning")
-                    target.projectVersion = newVersion
-                    print("projectVersion = \(target.projectVersion)")
-                    try writeGenericVersion(target: target)
-                case .appleGenericPresent:
-                    print("Apple Generic Versioning")
-                    target.projectVersion = newVersion
-                    print("projectVersion = \(target.projectVersion)")
-                    try writeAppleGenericVersion(target: target)
-                case .genericReady:
-                    print("Generic Versioning not set up")
-                case .appleGenericReady:
-                    print("Apple Generic Versioning not set up")
+                    switch target.versionSystemState {
+                    case .unknown:
+                        print("Version unknown")
+                    case .genericPresent:
+                        print("Generic Versioning")
+                        target.projectVersion = newVersion
+                        print("projectVersion = \(target.projectVersion)")
+                        try writeGenericVersion(target: target)
+                    case .appleGenericPresent:
+                        print("Apple Generic Versioning")
+                        target.projectVersion = newVersion
+                        print("projectVersion = \(target.projectVersion)")
+                        try writeAppleGenericVersion(target: target)
+                    case .genericReady:
+                        print("Generic Versioning not set up")
+                    case .appleGenericReady:
+                        print("Apple Generic Versioning not set up")
+                    }
                 }
             }
         } catch {
@@ -199,27 +217,28 @@ class VersionCommand: Command {
             try locateFiles()
 
             for target in targets {
-                print("Target: \(target.target.openStepComment)")
+                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true { print("Target: \(target.target.openStepComment)")
 
-                try determineVersionState(target: target)
+                    try determineVersionState(target: target)
 
-                switch target.versionSystemState {
-                case .unknown:
-                    print("Version unknown")
-                case .genericPresent:
-                    print("Generic Versioning")
-                    target.marketingVersion = newVersion
-                    print("marketingVersion = \(target.marketingVersion)")
-                    try writeGenericVersion(target: target)
-                case .appleGenericPresent:
-                    print("Apple Generic Versioning")
-                    target.marketingVersion = newVersion
-                    print("marketingVersion = \(target.marketingVersion)")
-                    try writeAppleGenericVersion(target: target)
-                case .genericReady:
-                    print("Generic Versioning not set up")
-                case .appleGenericReady:
-                    print("Apple Generic Versioning not set up")
+                    switch target.versionSystemState {
+                    case .unknown:
+                        print("Version unknown")
+                    case .genericPresent:
+                        print("Generic Versioning")
+                        target.marketingVersion = newVersion
+                        print("marketingVersion = \(target.marketingVersion)")
+                        try writeGenericVersion(target: target)
+                    case .appleGenericPresent:
+                        print("Apple Generic Versioning")
+                        target.marketingVersion = newVersion
+                        print("marketingVersion = \(target.marketingVersion)")
+                        try writeAppleGenericVersion(target: target)
+                    case .genericReady:
+                        print("Generic Versioning not set up")
+                    case .appleGenericReady:
+                        print("Apple Generic Versioning not set up")
+                    }
                 }
             }
         } catch {
@@ -251,38 +270,39 @@ class VersionCommand: Command {
             }
 
             for target in targets {
-                print("Target: \(target.target.openStepComment)")
+                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true { print("Target: \(target.target.openStepComment)")
 
-                try determineVersionState(target: target)
-                try determineDerivedSourceState(target: target)
-                try determineRunScriptState(target: target)
+                    try determineVersionState(target: target)
+                    try determineDerivedSourceState(target: target)
+                    try determineRunScriptState(target: target)
 
-                switch target.versionSystemState {
-                case .unknown:
-                    print("Version unknown")
-                    derivedAndRunScript(target)
-                case .genericPresent:
-                    if verbose == true {
-                        print("Generic Versioning")
+                    switch target.versionSystemState {
+                    case .unknown:
+                        print("Version unknown")
+                        derivedAndRunScript(target)
+                    case .genericPresent:
+                        if verbose == true {
+                            print("Generic Versioning")
+                        }
+                        derivedAndRunScript(target)
+                        print()
+                        print("Marketing Version: \(target.marketingVersion)")
+                        print("Project Version:   \(target.projectVersion)")
+                    case .appleGenericPresent:
+                        if verbose == true {
+                            print("Apple Generic Versioning")
+                        }
+                        derivedAndRunScript(target)
+                        print()
+                        print("Marketing Version: \(target.marketingVersion)")
+                        print("Project Version:   \(target.projectVersion)")
+                    case .genericReady:
+                        print("Generic Versioning not set up")
+                        derivedAndRunScript(target)
+                    case .appleGenericReady:
+                        print("Apple Generic Versioning not set up")
+                        derivedAndRunScript(target)
                     }
-                    derivedAndRunScript(target)
-                    print()
-                    print("Marketing Version: \(target.marketingVersion)")
-                    print("Project Version:   \(target.projectVersion)")
-                case .appleGenericPresent:
-                    if verbose == true {
-                        print("Apple Generic Versioning")
-                    }
-                    derivedAndRunScript(target)
-                    print()
-                    print("Marketing Version: \(target.marketingVersion)")
-                    print("Project Version:   \(target.projectVersion)")
-                case .genericReady:
-                    print("Generic Versioning not set up")
-                    derivedAndRunScript(target)
-                case .appleGenericReady:
-                    print("Apple Generic Versioning not set up")
-                    derivedAndRunScript(target)
                 }
             }
         } catch {
@@ -297,30 +317,31 @@ class VersionCommand: Command {
             try locateFiles()
 
             for target in targets {
-                print("Target: \(target.target.openStepComment)")
+                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true { print("Target: \(target.target.openStepComment)")
 
-                try determineVersionState(target: target)
-                if agvOnly == false {
-                    try determineDerivedSourceState(target: target)
-                    try determineRunScriptState(target: target)
-                }
-
-                if target.versionSystemState == .unknown {
-                    throw VersionCommandError.failed("Error: Could not determine version system state.")
-                }
-                if agvOnly == false {
-                    if target.runScriptState == .unknown {
-                        throw VersionCommandError.failed("Error: Could not determine run script state.")
+                    try determineVersionState(target: target)
+                    if agvOnly == false {
+                        try determineDerivedSourceState(target: target)
+                        try determineRunScriptState(target: target)
                     }
-                    if target.derivedSourceState == .unknown {
-                        throw VersionCommandError.failed("Error: Could not determine derived source state.")
-                    }
-                }
 
-                try actOnVersionState(target: target, agvOnly: agvOnly)
-                if agvOnly == false {
-                    try actOnRunScriptState(target: target)
-                    try actOnDerivedSourceState(target: target)
+                    if target.versionSystemState == .unknown {
+                        throw VersionCommandError.failed("Error: Could not determine version system state.")
+                    }
+                    if agvOnly == false {
+                        if target.runScriptState == .unknown {
+                            throw VersionCommandError.failed("Error: Could not determine run script state.")
+                        }
+                        if target.derivedSourceState == .unknown {
+                            throw VersionCommandError.failed("Error: Could not determine derived source state.")
+                        }
+                    }
+
+                    try actOnVersionState(target: target, agvOnly: agvOnly)
+                    if agvOnly == false {
+                        try actOnRunScriptState(target: target)
+                        try actOnDerivedSourceState(target: target)
+                    }
                 }
             }
         } catch {
