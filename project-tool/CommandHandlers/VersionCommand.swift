@@ -59,13 +59,13 @@ class VersionCommand: Command {
 
         baseDirUrl = URL(fileURLWithPath: dir)
 
+        targetFilter = cmd.parameters
+
         if cmd.boolOption("--init") == true {
             let agvonly = cmd.boolOption("--agvonly")
             doInit(agvonly)
             return
         }
-
-        targetFilter = cmd.parameters
 
         var handled: Bool = false
 
