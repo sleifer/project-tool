@@ -13,6 +13,8 @@ class ProjectCommand: Command {
     required init() {
     }
 
+    // swiftlint:disable cyclomatic_complexity
+
     func run(cmd: ParsedCommand, core: CommandCore) {
         var dir = FileManager.default.currentDirectoryPath
 
@@ -44,10 +46,19 @@ class ProjectCommand: Command {
                 print("Current directory is not the root of a git repository.")
             }
         }
+        if cmd.option("--fork") != nil {
+            if FileManager.default.fileExists(atPath: root.appendingPathComponent(".git")) == true {
+                ProcessRunner.runCommand("fork", args: [root])
+            } else {
+                print("Current directory is not the root of a git repository.")
+            }
+        }
         if cmd.option("--xcode") != nil {
             openXcode(dir)
         }
     }
+
+    // swiftlint:enable cyclomatic_complexity
 
     static func commandDefinition() -> SubcommandDefinition {
         var command = SubcommandDefinition()
@@ -83,6 +94,12 @@ class ProjectCommand: Command {
         tower.longOption = "--tower"
         tower.help = "Open current dir in Tower."
         command.options.append(tower)
+
+        var fork = CommandOption()
+        fork.shortOption = "-k"
+        fork.longOption = "--fork"
+        fork.help = "Open current dir in Fork."
+        command.options.append(fork)
 
         var xcode = CommandOption()
         xcode.shortOption = "-x"
