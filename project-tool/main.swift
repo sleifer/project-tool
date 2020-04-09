@@ -41,7 +41,7 @@ func main() {
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "version", "--init", "NCLViewer"]
+    let args = ["pt", "stamp", "NCLViewer", "/Users/simeon/Desktop/stamp.txt"]
     #else
     let args = CommandLine.arguments
     #endif

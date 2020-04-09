@@ -40,16 +40,16 @@ class StampCommand: Command {
         var marketingVersion: String = ""
         var projectVersion: String = ""
 
-        let matchedTarget = subCommand.targets.filter { (target) -> Bool in
-            if target.target.openStepComment == targetFilter {
-                return true
-            }
-            return false
-
-        }
-
         do {
             try subCommand.locateFiles()
+
+            let matchedTarget = subCommand.targets.filter { (target) -> Bool in
+                if target.target.openStepComment == targetFilter {
+                    return true
+                }
+                return false
+            }
+
             if let target = matchedTarget.first {
                 try subCommand.determineVersionState(target: target)
 
@@ -96,6 +96,7 @@ class StampCommand: Command {
         """
 
         do {
+            print("Written to: \(dstPath)")
             try fileText.write(to: URL(fileURLWithPath: dstPath), atomically: true, encoding: .utf8)
         } catch {
             print("Exception: \(error)")

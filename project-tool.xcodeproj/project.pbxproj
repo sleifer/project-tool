@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		62435A7D4E7A420BBC264CBEC178BB6D /* versions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5EE44463374D9891BDFDBA59766433 /* versions.swift */; };
+		DB007B81243FCEC700572EB5 /* versions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5EE44463374D9891BDFDBA59766433 /* versions.swift */; };
 		DB0B882F212B93B0005506C9 /* CleanupCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0B882E212B93B0005506C9 /* CleanupCommand.swift */; };
 		DB234618226F67510000DF87 /* DocumentationCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB234617226F67510000DF87 /* DocumentationCommand.swift */; };
 		DB28586423FEBFBC00520D9D /* CommandLineCore in Frameworks */ = {isa = PBXBuildFile; productRef = DB28586323FEBFBC00520D9D /* CommandLineCore */; };
@@ -227,7 +227,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PATH=${PATH}:${HOME}/bin\nif which pt > /dev/null; then\n  pt stamp ${DERIVED_FILE_DIR}/versions.swift\nelse\n  echo \"warning: pt not installed\"\nfi\n";
+			shellScript = "PATH=${PATH}:${HOME}/bin\nif which pt > /dev/null; then\n  pt stamp 'project-tool' ${DERIVED_FILE_DIR}/versions.swift\nelse\n  echo \"warning: pt not installed\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		DB9B0231210EB27300471D34 /* swiftlint */ = {
@@ -259,6 +259,7 @@
 				DBD4F62A21ED464B00A2B7AD /* VersionCommand.swift in Sources */,
 				DB9B020F210E2E1600471D34 /* main.swift in Sources */,
 				DB45B4A92408008200FADD6D /* RunScriptBuildSetting.swift in Sources */,
+				DB007B81243FCEC700572EB5 /* versions.swift in Sources */,
 				DB401C4F2438CD5F00003889 /* TargetsCommand.swift in Sources */,
 				DBCDF5F423DD2B4E00DA47EC /* Helpers.swift in Sources */,
 				DB2ABB7B23FC8CAD008F21C3 /* JSONReadWrite.swift in Sources */,
@@ -271,7 +272,6 @@
 				DB234618226F67510000DF87 /* DocumentationCommand.swift in Sources */,
 				DB401C512438CD7100003889 /* SchemesCommand.swift in Sources */,
 				DB9B022E210E4D2B00471D34 /* ProjectCommand.swift in Sources */,
-				62435A7D4E7A420BBC264CBEC178BB6D /* versions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
