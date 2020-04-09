@@ -12,13 +12,16 @@ import CommandLineCore
 class StampCommand: Command {
     required init() {}
 
+    // swiftlint:disable cyclomatic_complexity
+
     func run(cmd: ParsedCommand, core: CommandCore) {
-        if cmd.parameters.count < 1 {
+        if cmd.parameters.count < 2 {
             print("Missing required parameters.")
             return
         }
 
-        let dstPath = cmd.parameters[0].fullPath
+        let targetFilter = cmd.parameters[0]
+        let dstPath = cmd.parameters[1].fullPath
 
         var dir = FileManager.default.currentDirectoryPath
         if cmd.boolOption("--root") == true {
@@ -37,9 +40,17 @@ class StampCommand: Command {
         var marketingVersion: String = ""
         var projectVersion: String = ""
 
+        let matchedTarget = subCommand.targets.filter { (target) -> Bool in
+            if target.target.openStepComment == targetFilter {
+                return true
+            }
+            return false
+
+        }
+
         do {
             try subCommand.locateFiles()
-            if let target = subCommand.targets.first {
+            if let target = matchedTarget.first {
                 try subCommand.determineVersionState(target: target)
 
                 switch target.versionSystemState {
@@ -91,20 +102,17 @@ class StampCommand: Command {
         }
     }
 
+    // swiftlint:enable cyclomatic_complexity
+
     static func commandDefinition() -> SubcommandDefinition {
         var command = SubcommandDefinition()
         command.name = "stamp"
-        command.synopsis = "Embed git SHA in Info.plist."
+        command.synopsis = "Embed git SHA in build."
         command.hasFileParameters = true
 
-        var key = ParameterInfo()
-        key.hint = "key"
-        key.help = "Key to set in plist"
-        command.requiredParameters.append(key)
-
         var src = ParameterInfo()
-        src.hint = "src"
-        src.help = "Source Info.plist"
+        src.hint = "target"
+        src.help = "Target to pull version from"
         command.requiredParameters.append(src)
 
         var dst = ParameterInfo()
