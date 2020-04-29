@@ -12,7 +12,7 @@ import CommandLineCore
 func main() {
     #if DEBUG
     // for testing in Xcode
-    let path = "~/Documents/Code/NetCmdLog".expandingTildeInPath
+    let path = "~/Documents/Code/project-tool".expandingTildeInPath
     FileManager.default.changeCurrentDirectoryPath(path)
     #endif
 
@@ -41,7 +41,7 @@ func main() {
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "stamp", "NCLViewer", "/Users/simeon/Desktop/stamp.txt"]
+    let args = ["pt", "version"]
     #else
     let args = CommandLine.arguments
     #endif

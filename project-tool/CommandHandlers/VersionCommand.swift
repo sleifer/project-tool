@@ -147,9 +147,14 @@ class VersionCommand: Command {
         do {
             try locateFiles()
 
+            var first: Bool = true
             for target in targets {
                 if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true {
-                    print("Target: \(target.target.openStepComment)")
+                    if first == false {
+                        print()
+                    }
+                    first = false
+                    print(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
 
                     try determineVersionState(target: target)
 
@@ -182,8 +187,14 @@ class VersionCommand: Command {
         do {
             try locateFiles()
 
+            var first: Bool = true
             for target in targets {
-                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true { print("Target: \(target.target.openStepComment)")
+                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true {
+                    if first == false {
+                        print()
+                    }
+                    first = false
+                    print(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
 
                     try determineVersionState(target: target)
 
@@ -216,8 +227,14 @@ class VersionCommand: Command {
         do {
             try locateFiles()
 
+            var first: Bool = true
             for target in targets {
-                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true { print("Target: \(target.target.openStepComment)")
+                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true {
+                    if first == false {
+                        print()
+                    }
+                    first = false
+                    print(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
 
                     try determineVersionState(target: target)
 
@@ -269,8 +286,14 @@ class VersionCommand: Command {
                 }
             }
 
+            var first: Bool = true
             for target in targets {
-                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true { print("Target: \(target.target.openStepComment)")
+                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true {
+                    if first == false {
+                        print()
+                    }
+                    first = false
+                    print(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
 
                     try determineVersionState(target: target)
                     try determineDerivedSourceState(target: target)
@@ -285,7 +308,6 @@ class VersionCommand: Command {
                             print("Generic Versioning")
                         }
                         derivedAndRunScript(target)
-                        print()
                         print("Marketing Version: \(target.marketingVersion)")
                         print("Project Version:   \(target.projectVersion)")
                     case .appleGenericPresent:
@@ -293,7 +315,6 @@ class VersionCommand: Command {
                             print("Apple Generic Versioning")
                         }
                         derivedAndRunScript(target)
-                        print()
                         print("Marketing Version: \(target.marketingVersion)")
                         print("Project Version:   \(target.projectVersion)")
                     case .genericReady:
@@ -316,8 +337,14 @@ class VersionCommand: Command {
         do {
             try locateFiles()
 
+            var first: Bool = true
             for target in targets {
-                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true { print("Target: \(target.target.openStepComment)")
+                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true {
+                    if first == false {
+                        print()
+                    }
+                    first = false
+                    print(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
 
                     try determineVersionState(target: target)
                     if agvOnly == false {
