@@ -69,21 +69,38 @@ class VersionCommand: Command {
 
         var handled: Bool = false
 
+        var log: [[String]] = []
+
+        do {
+            try locateFiles()
+            for target in targets {
+                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true {
+                    log.append([])
+                }
+            }
+        } catch {}
+
         if cmd.boolOption("--bump") == true {
             handled = true
-            bumpProjectVersion()
+            bumpProjectVersion(log: &log)
         } else if let cmd = cmd.option("--bundle") {
             handled = true
-            setProjectVersion(cmd.arguments[0])
+            setProjectVersion(cmd.arguments[0], log: &log)
         }
 
         if let cmd = cmd.option("--marketing") {
             handled = true
-            setMarketingVersion(cmd.arguments[0])
+            setMarketingVersion(cmd.arguments[0], log: &log)
         }
 
         if handled == false {
             reportVersions(cmd.boolOption("--verbose"))
+        } else {
+            for target in log {
+                for line in target {
+                    print(line)
+                }
+            }
         }
     }
 
@@ -143,39 +160,56 @@ class VersionCommand: Command {
         return command
     }
 
-    func bumpProjectVersion() {
+    func bumpProjectVersion(log: inout [[String]]) {
         do {
             try locateFiles()
 
             var first: Bool = true
+            var logIdx: Int = 0
             for target in targets {
                 if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true {
+                    let firstLog: Bool = log[logIdx].count == 0
                     if first == false {
-                        print()
+                        if firstLog {
+                            log[logIdx].append("")
+                        }
                     }
                     first = false
-                    print(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
+                    if firstLog {
+                        log[logIdx].append(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
+                    }
 
                     try determineVersionState(target: target)
 
                     switch target.versionSystemState {
                     case .unknown:
-                        print("Version unknown")
+                        if firstLog {
+                            log[logIdx].append("Version unknown")
+                        }
                     case .genericPresent:
-                        print("Generic Versioning")
+                        if firstLog {
+                            log[logIdx].append("Generic Versioning")
+                        }
                         target.projectVersion = String((Int(target.projectVersion) ?? 0) + 1)
-                        print("projectVersion = \(target.projectVersion)")
+                        log[logIdx].append("projectVersion = \(target.projectVersion)")
                         try writeGenericVersion(target: target)
                     case .appleGenericPresent:
-                        print("Apple Generic Versioning")
+                        if firstLog {
+                            log[logIdx].append("Apple Generic Versioning")
+                        }
                         target.projectVersion = String((Int(target.projectVersion) ?? 0) + 1)
-                        print("projectVersion = \(target.projectVersion)")
+                        log[logIdx].append("projectVersion = \(target.projectVersion)")
                         try writeAppleGenericVersion(target: target)
                     case .genericReady:
-                        print("Generic Versioning not set up")
+                        if firstLog {
+                            log[logIdx].append("Generic Versioning not set up")
+                        }
                     case .appleGenericReady:
-                        print("Apple Generic Versioning not set up")
+                        if firstLog {
+                            log[logIdx].append("Apple Generic Versioning not set up")
+                        }
                     }
+                    logIdx += 1
                 }
             }
         } catch {
@@ -183,39 +217,54 @@ class VersionCommand: Command {
         }
     }
 
-    func setProjectVersion(_ newVersion: String) {
+    func setProjectVersion(_ newVersion: String, log: inout [[String]]) {
         do {
             try locateFiles()
 
             var first: Bool = true
+            var logIdx: Int = 0
             for target in targets {
                 if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true {
+                    let firstLog: Bool = log[logIdx].count == 0
                     if first == false {
-                        print()
+                        log[logIdx].append("")
                     }
                     first = false
-                    print(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
+                    if firstLog {
+                        log[logIdx].append(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
+                    }
 
                     try determineVersionState(target: target)
 
                     switch target.versionSystemState {
                     case .unknown:
-                        print("Version unknown")
+                        if firstLog {
+                            log[logIdx].append("Version unknown")
+                        }
                     case .genericPresent:
-                        print("Generic Versioning")
+                        if firstLog {
+                            log[logIdx].append("Generic Versioning")
+                        }
                         target.projectVersion = newVersion
-                        print("projectVersion = \(target.projectVersion)")
+                        log[logIdx].append("projectVersion = \(target.projectVersion)")
                         try writeGenericVersion(target: target)
                     case .appleGenericPresent:
-                        print("Apple Generic Versioning")
+                        if firstLog {
+                            log[logIdx].append("Apple Generic Versioning")
+                        }
                         target.projectVersion = newVersion
-                        print("projectVersion = \(target.projectVersion)")
+                        log[logIdx].append("projectVersion = \(target.projectVersion)")
                         try writeAppleGenericVersion(target: target)
                     case .genericReady:
-                        print("Generic Versioning not set up")
+                        if firstLog {
+                            log[logIdx].append("Generic Versioning not set up")
+                        }
                     case .appleGenericReady:
-                        print("Apple Generic Versioning not set up")
+                        if firstLog {
+                            log[logIdx].append("Apple Generic Versioning not set up")
+                        }
                     }
+                    logIdx += 1
                 }
             }
         } catch {
@@ -223,39 +272,56 @@ class VersionCommand: Command {
         }
     }
 
-    func setMarketingVersion(_ newVersion: String) {
+    func setMarketingVersion(_ newVersion: String, log: inout [[String]]) {
         do {
             try locateFiles()
 
             var first: Bool = true
+            var logIdx: Int = 0
             for target in targets {
                 if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true {
+                    let firstLog: Bool = log[logIdx].count == 0
                     if first == false {
-                        print()
+                        if firstLog {
+                            log[logIdx].append("")
+                        }
                     }
                     first = false
-                    print(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
+                    if firstLog {
+                        log[logIdx].append(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
+                    }
 
                     try determineVersionState(target: target)
 
                     switch target.versionSystemState {
                     case .unknown:
-                        print("Version unknown")
+                        if firstLog {
+                            log[logIdx].append("Version unknown")
+                        }
                     case .genericPresent:
-                        print("Generic Versioning")
+                        if firstLog {
+                            log[logIdx].append("Generic Versioning")
+                        }
                         target.marketingVersion = newVersion
-                        print("marketingVersion = \(target.marketingVersion)")
+                        log[logIdx].append("marketingVersion = \(target.marketingVersion)")
                         try writeGenericVersion(target: target)
                     case .appleGenericPresent:
-                        print("Apple Generic Versioning")
+                        if firstLog {
+                            log[logIdx].append("Apple Generic Versioning")
+                        }
                         target.marketingVersion = newVersion
-                        print("marketingVersion = \(target.marketingVersion)")
+                        log[logIdx].append("marketingVersion = \(target.marketingVersion)")
                         try writeAppleGenericVersion(target: target)
                     case .genericReady:
-                        print("Generic Versioning not set up")
+                        if firstLog {
+                            log[logIdx].append("Generic Versioning not set up")
+                        }
                     case .appleGenericReady:
-                        print("Apple Generic Versioning not set up")
+                        if firstLog {
+                            log[logIdx].append("Apple Generic Versioning not set up")
+                        }
                     }
+                    logIdx += 1
                 }
             }
         } catch {
