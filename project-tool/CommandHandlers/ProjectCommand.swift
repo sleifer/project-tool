@@ -23,37 +23,27 @@ class ProjectCommand: Command {
             root = path
         }
 
-        if cmd.option("--root") != nil {
+        if cmd.boolOption("--root") {
             dir = root
         }
 
-        if cmd.option("--finder") != nil {
+        if cmd.boolOption("--finder") {
             ProcessRunner.runCommand("open", args: [dir])
         }
-        if cmd.option("--launchbar") != nil {
+        if cmd.boolOption("--launchbar") {
             ProcessRunner.runCommand("open", args: ["-a", "LaunchBar", dir])
         }
-        if cmd.option("--sublime") != nil {
-            ProcessRunner.runCommand("subl", args: [dir])
-        }
-        if cmd.option("--bbedit") != nil {
+        if cmd.boolOption("--bbedit") {
             ProcessRunner.runCommand("bbedit", args: [dir])
         }
-        if cmd.option("--tower") != nil {
-            if FileManager.default.fileExists(atPath: root.appendingPathComponent(".git")) == true {
-                ProcessRunner.runCommand("gittower", args: [root])
-            } else {
-                print("Current directory is not the root of a git repository.")
-            }
-        }
-        if cmd.option("--fork") != nil {
+        if cmd.boolOption("--fork") {
             if FileManager.default.fileExists(atPath: root.appendingPathComponent(".git")) == true {
                 ProcessRunner.runCommand("fork", args: [root])
             } else {
                 print("Current directory is not the root of a git repository.")
             }
         }
-        if cmd.option("--xcode") != nil {
+        if cmd.boolOption("--xcode") {
             openXcode(dir)
         }
     }
@@ -83,20 +73,8 @@ class ProjectCommand: Command {
         launchbar.help = "Open current dir in LaunchBar."
         command.options.append(launchbar)
 
-        var sublime = CommandOption()
-        sublime.shortOption = "-s"
-        sublime.longOption = "--sublime"
-        sublime.help = "Open current dir in Sublime Text."
-        command.options.append(sublime)
-
-        var tower = CommandOption()
-        tower.shortOption = "-t"
-        tower.longOption = "--tower"
-        tower.help = "Open current dir in Tower."
-        command.options.append(tower)
-
         var fork = CommandOption()
-        fork.shortOption = "-k"
+        fork.shortOption = "-g"
         fork.longOption = "--fork"
         fork.help = "Open current dir in Fork."
         command.options.append(fork)
