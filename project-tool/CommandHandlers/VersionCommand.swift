@@ -45,6 +45,8 @@ class VersionCommand: Command {
 
     required init() {}
 
+    // swiftlint:disable cyclomatic_complexity
+
     func run(cmd: ParsedCommand, core: CommandCore) {
         var dir = FileManager.default.currentDirectoryPath
 
@@ -104,6 +106,8 @@ class VersionCommand: Command {
         }
     }
 
+    // swiftlint:enable cyclomatic_complexity
+
     static func commandDefinition() -> SubcommandDefinition {
         var command = SubcommandDefinition()
         command.name = "version"
@@ -159,6 +163,8 @@ class VersionCommand: Command {
 
         return command
     }
+
+    // swiftlint:disable cyclomatic_complexity
 
     func bumpProjectVersion(log: inout [[String]]) {
         do {
@@ -217,6 +223,10 @@ class VersionCommand: Command {
         }
     }
 
+    // swiftlint:enable cyclomatic_complexity
+
+    // swiftlint:disable cyclomatic_complexity
+
     func setProjectVersion(_ newVersion: String, log: inout [[String]]) {
         do {
             try locateFiles()
@@ -271,6 +281,10 @@ class VersionCommand: Command {
             print("Exception: \(error)")
         }
     }
+
+    // swiftlint:enable cyclomatic_complexity
+
+    // swiftlint:disable cyclomatic_complexity
 
     func setMarketingVersion(_ newVersion: String, log: inout [[String]]) {
         do {
@@ -328,6 +342,8 @@ class VersionCommand: Command {
             print("Exception: \(error)")
         }
     }
+
+    // swiftlint:enable cyclomatic_complexity
 
     // swiftlint:disable cyclomatic_complexity
 
