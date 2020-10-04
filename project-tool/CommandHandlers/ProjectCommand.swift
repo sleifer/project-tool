@@ -13,8 +13,6 @@ class ProjectCommand: Command {
     required init() {
     }
 
-    // swiftlint:disable cyclomatic_complexity
-
     func run(cmd: ParsedCommand, core: CommandCore) {
         var dir = FileManager.default.currentDirectoryPath
 
@@ -47,8 +45,6 @@ class ProjectCommand: Command {
             openXcode(dir)
         }
     }
-
-    // swiftlint:enable cyclomatic_complexity
 
     static func commandDefinition() -> SubcommandDefinition {
         var command = SubcommandDefinition()
@@ -90,7 +86,11 @@ class ProjectCommand: Command {
 
     func openXcode(_ dir: String) {
         if let projectPath = Helpers.findXcodeProject(dir) {
-            ProcessRunner.runCommand("open", args: [projectPath])
+            if let runningXcode = Helpers.findRunningXcode() {
+                SimpleRunner.run("open -a '\(runningXcode)' '\(projectPath)'")
+            } else {
+                SimpleRunner.run("open '\(projectPath)'")
+            }
         } else {
             print("No Xcode project in current directory.")
         }

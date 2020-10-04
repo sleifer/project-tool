@@ -8,6 +8,7 @@
 
 import CommandLineCore
 import Foundation
+import AppKit
 
 class Helpers {
     static func findGitRoot() -> String? {
@@ -16,6 +17,16 @@ class Helpers {
             return proc.stdOut.trimmed()
         } else {
             print(proc.stdErr)
+        }
+        return nil
+    }
+
+    static func findRunningXcode() -> String? {
+        let xcodes = NSWorkspace.shared.runningApplications.filter { (item) -> Bool in
+            item.bundleIdentifier == "com.apple.dt.Xcode"
+        }
+        if let item = xcodes.first {
+            return item.bundleURL?.path
         }
         return nil
     }

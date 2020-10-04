@@ -14,6 +14,8 @@ class DocumentationCommand: Command {
     required init() {
     }
 
+    // swiftlint:disable cyclomatic_complexity
+
     func run(cmd: ParsedCommand, core: CommandCore) {
         var outputDir: String?
         do {
@@ -65,6 +67,8 @@ class DocumentationCommand: Command {
             }
         }
     }
+
+    // swiftlint:enable cyclomatic_complexity
 
     static func commandDefinition() -> SubcommandDefinition {
         var command = SubcommandDefinition()
