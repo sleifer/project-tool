@@ -719,7 +719,7 @@ class VersionCommand: Command {
         stampPhase.shellScript = """
         PATH=${PATH}:${HOME}/bin
         if which pt > /dev/null; then
-        pt stamp '\(target.target.openStepComment)' ${DERIVED_FILE_DIR}/\(target.versionsSwiftFilename)
+        pt stamp '\(target.target.openStepComment)' "${DERIVED_FILE_DIR}/\(target.versionsSwiftFilename)"
         else
           echo "warning: pt not installed"
         fi
