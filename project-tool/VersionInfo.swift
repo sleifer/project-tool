@@ -31,14 +31,16 @@ struct VersionInfo {
         }
         parts.append(contentsOf: [0, 0, 0, 0])
 
-        self.fields = Array(parts[0...depth.rawValue])
+        self.fields = Array(parts[0 ... depth.rawValue])
         self.depth = depth
     }
 
     mutating func bump(_ field: VersionField) {
         fields[field.rawValue] += 1
-        for idx in field.rawValue + 1 ... depth.rawValue {
-            fields[idx] = 0
+        if field.rawValue + 1 <= depth.rawValue {
+            for idx in field.rawValue + 1 ... depth.rawValue {
+                fields[idx] = 0
+            }
         }
     }
 

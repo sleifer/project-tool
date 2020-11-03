@@ -41,7 +41,7 @@ func main() {
 
     #if DEBUG
     // for testing in Xcode
-    let args = ["pt", "version"]
+    let args = ["pt", "version", "-2"]
     #else
     let args = CommandLine.arguments
     #endif
