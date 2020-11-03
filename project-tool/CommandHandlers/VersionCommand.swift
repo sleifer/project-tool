@@ -90,7 +90,16 @@ class VersionCommand: Command {
             setProjectVersion(cmd.arguments[0], log: &log)
         }
 
-        if let cmd = cmd.option("--marketing") {
+        if cmd.boolOption("--patch") == true {
+            handled = true
+            bumpMarketingVersion(.patch, log: &log)
+        } else if cmd.boolOption("--minor") == true {
+            handled = true
+            bumpMarketingVersion(.minor, log: &log)
+        } else if cmd.boolOption("--major") == true {
+            handled = true
+            bumpMarketingVersion(.major, log: &log)
+        } else if let cmd = cmd.option("--marketing") {
             handled = true
             setMarketingVersion(cmd.arguments[0], log: &log)
         }
@@ -132,8 +141,26 @@ class VersionCommand: Command {
         var bumpCmd = CommandOption()
         bumpCmd.shortOption = "-b"
         bumpCmd.longOption = "--bump"
-        bumpCmd.help = "Bump version."
+        bumpCmd.help = "Bump bundle version."
         command.options.append(bumpCmd)
+
+        var majorCmd = CommandOption()
+        majorCmd.shortOption = "-1"
+        majorCmd.longOption = "--major"
+        majorCmd.help = "Bump major marketing version."
+        command.options.append(majorCmd)
+
+        var minorCmd = CommandOption()
+        minorCmd.shortOption = "-2"
+        minorCmd.longOption = "--minor"
+        minorCmd.help = "Bump minor marketing version."
+        command.options.append(minorCmd)
+
+        var patchCmd = CommandOption()
+        patchCmd.shortOption = "-3"
+        patchCmd.longOption = "--patch"
+        patchCmd.help = "Bump patch marketing version."
+        command.options.append(patchCmd)
 
         var versionCmd = CommandOption()
         versionCmd.shortOption = "-s"
@@ -264,6 +291,73 @@ class VersionCommand: Command {
                         }
                         target.projectVersion = newVersion
                         log[logIdx].append("projectVersion = \(target.projectVersion)")
+                        try writeAppleGenericVersion(target: target)
+                    case .genericReady:
+                        if firstLog {
+                            log[logIdx].append("Generic Versioning not set up")
+                        }
+                    case .appleGenericReady:
+                        if firstLog {
+                            log[logIdx].append("Apple Generic Versioning not set up")
+                        }
+                    }
+                    logIdx += 1
+                }
+            }
+        } catch {
+            print("Exception: \(error)")
+        }
+    }
+
+    // swiftlint:enable cyclomatic_complexity
+
+    // swiftlint:disable cyclomatic_complexity
+
+    func bumpMarketingVersion(_ field: VersionField, log: inout [[String]]) {
+        do {
+            try locateFiles()
+
+            var first: Bool = true
+            var logIdx: Int = 0
+            for target in targets {
+                if targetFilter.count == 0 || targetFilter.contains(target.target.openStepComment) == true {
+                    let firstLog: Bool = log[logIdx].count == 0
+                    if first == false {
+                        if firstLog {
+                            log[logIdx].append("")
+                        }
+                    }
+                    first = false
+                    if firstLog {
+                        log[logIdx].append(ANSIColor.brightBlue + "Target: " + target.target.openStepComment + ANSIColor.reset)
+                    }
+
+                    try determineVersionState(target: target)
+
+                    switch target.versionSystemState {
+                    case .unknown:
+                        if firstLog {
+                            log[logIdx].append("Version unknown")
+                        }
+                    case .genericPresent:
+                        if firstLog {
+                            log[logIdx].append("Generic Versioning")
+                        }
+
+                        var vers = VersionInfo(target.marketingVersion)
+                        vers.bump(field)
+                        target.marketingVersion = vers.string
+                        log[logIdx].append("marketingVersion = \(target.marketingVersion)")
+                        try writeGenericVersion(target: target)
+                    case .appleGenericPresent:
+                        if firstLog {
+                            log[logIdx].append("Apple Generic Versioning")
+                        }
+
+                        var vers = VersionInfo(target.marketingVersion)
+                        vers.bump(field)
+                        target.marketingVersion = vers.string
+                        log[logIdx].append("marketingVersion = \(target.marketingVersion)")
                         try writeAppleGenericVersion(target: target)
                     case .genericReady:
                         if firstLog {

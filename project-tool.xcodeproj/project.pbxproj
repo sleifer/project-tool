@@ -31,6 +31,7 @@
 		DBCDF5F423DD2B4E00DA47EC /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCDF5F323DD2B4E00DA47EC /* Helpers.swift */; };
 		DBD4F62A21ED464B00A2B7AD /* VersionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD4F62921ED464B00A2B7AD /* VersionCommand.swift */; };
 		DBD4F62C21EE2CBF00A2B7AD /* StampCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD4F62B21EE2CBF00A2B7AD /* StampCommand.swift */; };
+		DBF4B4FB2551AB2300C53410 /* VersionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF4B4FA2551AB2300C53410 /* VersionInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -74,6 +75,7 @@
 		DBCDF5F323DD2B4E00DA47EC /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		DBD4F62921ED464B00A2B7AD /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
 		DBD4F62B21EE2CBF00A2B7AD /* StampCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampCommand.swift; sourceTree = "<group>"; };
+		DBF4B4FA2551AB2300C53410 /* VersionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 				DBB183162406AFB1002C0B1A /* RunScriptCatalog.swift */,
 				DBB183182406AFBA002C0B1A /* RunScriptEntry.swift */,
 				DBB1831C24075DB2002C0B1A /* RunScriptFile.swift */,
+				DBF4B4FA2551AB2300C53410 /* VersionInfo.swift */,
 			);
 			path = "project-tool";
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 				DB2ABB7B23FC8CAD008F21C3 /* JSONReadWrite.swift in Sources */,
 				DBCDF5F223DD248E00DA47EC /* XcframeworkCommand.swift in Sources */,
 				DB9B0230210E4D4400471D34 /* BuildCommand.swift in Sources */,
+				DBF4B4FB2551AB2300C53410 /* VersionInfo.swift in Sources */,
 				DBB1831B2406AFD0002C0B1A /* RunScriptCommand.swift in Sources */,
 				DBD4F62C21EE2CBF00A2B7AD /* StampCommand.swift in Sources */,
 				DBB1831D24075DB2002C0B1A /* RunScriptFile.swift in Sources */,
