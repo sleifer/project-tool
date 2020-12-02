@@ -38,7 +38,7 @@ extension Array where Element == NativeTargetWithConfigurations {
         if self.count > 1 {
             for (index, item) in self.enumerated() {
                 let suffix = item.target.name ?? "\(index + 1)"
-                let name = "versions \(suffix).swift".replacingOccurrences(of: " ", with: "_")
+                let name = "versions \(suffix).swift".replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "")
                 item.versionsSwiftFilename = name
             }
         }
