@@ -86,12 +86,18 @@ class StampCommand: Command {
             sha += "+"
         }
 
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMM yyyy H:mm:ss.SSS"
+        let buildDate = formatter.string(from: date)
+
         let fileText = """
         struct VersionStrings {
             static let marketingVersion: String = "\(marketingVersion)"
             static let projectVersion: String = "\(projectVersion)"
             static let gitHash: String = "\(sha)"
-            static let fullVersion = "\(marketingVersion) (\(projectVersion)) <\(sha)>"
+            static let fullVersion: String = "\(marketingVersion) (\(projectVersion)) <\(sha)>"
+            static let buildDate: String = "\(buildDate)>"
         }
         """
 
