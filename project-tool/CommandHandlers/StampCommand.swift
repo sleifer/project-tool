@@ -97,7 +97,7 @@ class StampCommand: Command {
             static let projectVersion: String = "\(projectVersion)"
             static let gitHash: String = "\(sha)"
             static let fullVersion: String = "\(marketingVersion) (\(projectVersion)) <\(sha)>"
-            static let buildDate: String = "\(buildDate)>"
+            static let buildDate: String = "\(buildDate)"
         }
         """
 
