@@ -810,6 +810,7 @@ class VersionCommand: Command {
         stampPhase.name = "Stamp Version"
         stampPhase.shellPath = "/bin/sh"
         stampPhase.showEnvVarsInLog = false
+        stampPhase.alwaysOutOfDate = true
         stampPhase.shellScript = """
         PATH=${PATH}:${HOME}/bin
         if which pt > /dev/null; then
@@ -817,6 +818,7 @@ class VersionCommand: Command {
         else
           echo "warning: pt not installed"
         fi
+
         """
 
         project.add(object: stampPhase, for: stampPhase.referenceKey)
