@@ -75,6 +75,19 @@ class XcframeworkCommand: Command {
                     }
                 }
 
+                if let scheme = cmd.option("--ios") {
+                    iOSScheme = scheme.arguments[0]
+                }
+                if let scheme = cmd.option("--macos") {
+                    macOSScheme = scheme.arguments[0]
+                }
+                if let scheme = cmd.option("--tvos") {
+                    tvOSScheme = scheme.arguments[0]
+                }
+                if let scheme = cmd.option("--watchos") {
+                    watchOSScheme = scheme.arguments[0]
+                }
+
                 if iOSScheme == nil && macOSScheme == nil && tvOSScheme == nil && watchOSScheme == nil {
                     print("Could not auto-detect any (i/mac/tv/watch)OS schemes.")
                     return
@@ -158,6 +171,82 @@ class XcframeworkCommand: Command {
         dryrun.longOption = "--dryrun"
         dryrun.help = "Output commands but do not build anything."
         command.options.append(dryrun)
+
+        var iOSScheme = CommandOption()
+        iOSScheme.shortOption = "-i"
+        iOSScheme.longOption = "--ios"
+        iOSScheme.argumentCount = 1
+        iOSScheme.help = "Scheme for building for iOS."
+        iOSScheme.completionCallback = { () -> [String] in
+            if let path = Helpers.findXcodeProject(FileManager.default.currentDirectoryPath) {
+                if path.hasSuffix(".xcodeproj") {
+                    let schemes = Helpers.findProjectSchemes(path)
+                    return schemes
+                } else {
+                    let schemes = Helpers.findWorkspaceSchemes(path)
+                    return schemes
+                }
+            }
+            return []
+        }
+        command.options.append(iOSScheme)
+
+        var macOSScheme = CommandOption()
+        macOSScheme.shortOption = "-m"
+        macOSScheme.longOption = "--macos"
+        macOSScheme.argumentCount = 1
+        macOSScheme.help = "Scheme for building for macOS."
+        macOSScheme.completionCallback = { () -> [String] in
+            if let path = Helpers.findXcodeProject(FileManager.default.currentDirectoryPath) {
+                if path.hasSuffix(".xcodeproj") {
+                    let schemes = Helpers.findProjectSchemes(path)
+                    return schemes
+                } else {
+                    let schemes = Helpers.findWorkspaceSchemes(path)
+                    return schemes
+                }
+            }
+            return []
+        }
+        command.options.append(macOSScheme)
+
+        var tvOSScheme = CommandOption()
+        tvOSScheme.shortOption = "-t"
+        tvOSScheme.longOption = "--tvos"
+        tvOSScheme.argumentCount = 1
+        tvOSScheme.help = "Scheme for building for tvOS."
+        tvOSScheme.completionCallback = { () -> [String] in
+            if let path = Helpers.findXcodeProject(FileManager.default.currentDirectoryPath) {
+                if path.hasSuffix(".xcodeproj") {
+                    let schemes = Helpers.findProjectSchemes(path)
+                    return schemes
+                } else {
+                    let schemes = Helpers.findWorkspaceSchemes(path)
+                    return schemes
+                }
+            }
+            return []
+        }
+        command.options.append(tvOSScheme)
+
+        var watchOSScheme = CommandOption()
+        watchOSScheme.shortOption = "-w"
+        watchOSScheme.longOption = "--watchos"
+        watchOSScheme.argumentCount = 1
+        watchOSScheme.help = "Scheme for building for watchOS."
+        watchOSScheme.completionCallback = { () -> [String] in
+            if let path = Helpers.findXcodeProject(FileManager.default.currentDirectoryPath) {
+                if path.hasSuffix(".xcodeproj") {
+                    let schemes = Helpers.findProjectSchemes(path)
+                    return schemes
+                } else {
+                    let schemes = Helpers.findWorkspaceSchemes(path)
+                    return schemes
+                }
+            }
+            return []
+        }
+        command.options.append(watchOSScheme)
 
         var name = CommandOption()
         name.shortOption = "-n"
