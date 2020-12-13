@@ -139,7 +139,7 @@ class XcframeworkCommand: Command {
         command.synopsis = "Build an xcframework from current project."
 
         var dryrun = CommandOption()
-        dryrun.shortOption = "-n"
+        dryrun.shortOption = "-d"
         dryrun.longOption = "--dryrun"
         dryrun.help = "Output commands but do not build anything."
         command.options.append(dryrun)
