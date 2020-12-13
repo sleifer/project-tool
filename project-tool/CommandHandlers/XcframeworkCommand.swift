@@ -80,6 +80,21 @@ class XcframeworkCommand: Command {
                     return
                 }
 
+                print("xcframework name: '\(name)'")
+                if let schemeName = iOSScheme {
+                    print("Scheme '\(schemeName)' -> iOS (device and simulator)")
+                }
+                if let schemeName = macOSScheme {
+                    print("Scheme '\(schemeName)' -> macOS (device)")
+                }
+                if let schemeName = tvOSScheme {
+                    print("Scheme '\(schemeName)' -> tvOS (device and simulator)")
+                }
+                if let schemeName = watchOSScheme {
+                    print("Scheme '\(schemeName)' -> watchOS (device and simulator)")
+                }
+                print("- - - - - - - - - -")
+
                 let workDir = "~/Desktop/\(name)-working".expandingTildeInPath
 
                 var createCommand = "xcodebuild -create-xcframework"
